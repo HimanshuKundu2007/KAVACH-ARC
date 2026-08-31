@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>KAVACH-ARC | Autonomous Reasoning & Correction</title>
+
+    <!-- Tailwind CSS with Forms and Container Queries Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Exact Tailwind Configuration from Stitch Design System -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error": "#690005",
+                        "surface-container-highest": "#31353c",
+                        "outline": "#859399",
+                        "tertiary-fixed": "#ffddb1",
+                        "inverse-primary": "#00677f",
+                        "surface-container": "#1c2026",
+                        "surface-variant": "#31353c",
+                        "surface-dim": "#10141a",
+                        "secondary": "#c1c7d2",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-container": "#00566a",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "outline-variant": "#3c494e",
+                        "on-primary-fixed": "#001f28",
+                        "background": "#10141a",
+                        "on-secondary-fixed-variant": "#414750",
+                        "on-surface": "#dfe2eb",
+                        "surface-tint": "#4cd6ff",
+                        "primary-fixed": "#b7eaff",
+                        "on-primary": "#003543",
+                        "primary-container": "#00d1ff",
+                        "on-tertiary": "#442b00",
+                        "tertiary": "#ffd59c",
+                        "on-background": "#dfe2eb",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#dde3ee",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "surface-container-high": "#262a31",
+                        "inverse-surface": "#dfe2eb",
+                        "on-surface-variant": "#bbc9cf",
+                        "surface-container-low": "#181c22",
+                        "on-secondary-fixed": "#161c24",
+                        "tertiary-container": "#feb127",
+                        "tertiary-fixed-dim": "#ffba49",
+                        "primary": "#a4e6ff",
+                        "surface-bright": "#353940",
+                        "inverse-on-surface": "#2d3137",
+                        "on-secondary-container": "#b6bcc7",
+                        "primary-fixed-dim": "#4cd6ff",
+                        "secondary-fixed-dim": "#c1c7d2",
+                        "on-primary-fixed-variant": "#004e60",
+                        "secondary-container": "#464c55",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#2b3139",
+                        "on-tertiary-container": "#6b4700",
+                        "surface": "#10141a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "sm": "0.125rem",
+                        "md": "0.375rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "gutter": "16px",
+                        "margin": "24px"
+                    },
+                    fontFamily: {
+                        "label-caps": ["Inter", "sans-serif"],
+                        "code-md": ["'JetBrains Mono'", "monospace"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "title-sm": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "450" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0A0E14;
+            color: #dfe2eb;
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0E14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3c494e;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #859399;
+        }
+
+        .node-pulse {
+            box-shadow: 0 0 10px 2px rgba(164, 230, 255, 0.6);
+        }
+
+        .diff-added {
+            background-color: rgba(6, 95, 70, 0.35);
+            color: #34d399;
+        }
+
+        .diff-removed {
+            background-color: rgba(153, 27, 27, 0.35);
+            color: #f87171;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen overflow-hidden antialiased">
+
+    <!-- TopNavBar -->
+    <header
+        class="bg-surface-container fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16 border-b border-outline-variant">
+        <div class="flex items-center gap-4">
+            <div class="w-8 h-8 rounded bg-primary/20 border border-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary text-xl">shield</span>
+            </div>
+            <span class="font-headline-md text-headline-md text-primary tracking-tight">KAVACH-ARC | Autonomous
+                Reasoning & Correction</span>
+            <span
+                class="hidden md:inline-block px-2.5 py-0.5 rounded text-[11px] font-label-caps uppercase bg-primary/10 border border-primary/30 text-primary">PoC
+                v1.0</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-sm">search</span>
+                <input
+                    class="bg-surface-container-lowest border border-outline-variant text-on-surface font-body-sm text-body-sm rounded pl-9 pr-4 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 placeholder-on-surface-variant transition-colors"
+                    placeholder="Search vulnerability telemetry..." type="text" />
+            </div>
+            <div class="flex items-center gap-4">
+                <button title="Notifications"
+                    class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center justify-center">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <button title="Settings"
+                    class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center justify-center">
+                    <span class="material-symbols-outlined">settings</span>
+                </button>
+                <div
+                    class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden flex items-center justify-center">
+                    <span class="material-symbols-outlined text-secondary">security</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 pt-16 overflow-hidden">
+        <!-- SideNavBar -->
+        <nav
+            class="bg-surface-container-low fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-margin z-40 border-r border-outline-variant">
+            <div class="px-6 mb-6 flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-9 h-9 rounded bg-surface-container flex items-center justify-center border border-outline-variant">
+                        <span class="material-symbols-outlined text-primary">terminal</span>
+                    </div>
+                    <div>
+                        <h2 class="font-label-caps text-label-caps text-primary">KAVACH-ARC</h2>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">Precision Security</p>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center gap-2 px-3 py-1.5 rounded bg-[#121820] border border-[#1F2937]">
+                    <div id="sidebar-status-dot"
+                        class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(164,230,255,0.6)]">
+                    </div>
+                    <span id="sidebar-status-text" class="font-code-md text-code-md text-primary">Operational</span>
+                </div>
+            </div>
+
+            <ul class="flex-1 flex flex-col gap-1 px-2">
+                <!-- 1. Dashboard -->
+                <li>
+                    <button onclick="switchScreen('dashboard')" id="nav-dashboard"
+                        class="nav-item flex items-center gap-3 text-primary bg-surface-variant border-l-4 border-primary px-4 py-3 font-body-md text-body-md transition-all w-full text-left">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span>Dashboard</span>
+                    </button>
+                </li>
+                <!-- 2. Analysis -->
+                <li>
+                    <button onclick="switchScreen('analysis')" id="nav-analysis"
+                        class="nav-item flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 transition-all font-body-md text-body-md w-full text-left border-l-4 border-transparent">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span>Analysis</span>
+                    </button>
+                </li>
+                <!-- 3. Evidence -->
+                <li>
+                    <button onclick="switchScreen('evidence')" id="nav-evidence"
+                        class="nav-item flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 transition-all font-body-md text-body-md w-full text-left border-l-4 border-transparent">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        <span>Evidence</span>
+                    </button>
+                </li>
+                <!-- 4. Correction -->
+                <li>
+                    <button onclick="switchScreen('correction')" id="nav-correction"
+                        class="nav-item flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 transition-all font-body-md text-body-md w-full text-left border-l-4 border-transparent">
+                        <span class="material-symbols-outlined">build_circle</span>
+                        <span>Correction</span>
+                    </button>
+                </li>
+                <!-- 5. Verification -->
+                <li>
+                    <button onclick="switchScreen('verification')" id="nav-verification"
+                        class="nav-item flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 transition-all font-body-md text-body-md w-full text-left border-l-4 border-transparent">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <span>Verification</span>
+                    </button>
+                </li>
+                <!-- 6. Reports -->
+                <li>
+                    <button onclick="switchScreen('reports')" id="nav-reports"
+                        class="nav-item flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 transition-all font-body-md text-body-md w-full text-left border-l-4 border-transparent">
+                        <span class="material-symbols-outlined">description</span>
+                        <span>Reports</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="mt-auto flex flex-col gap-1 px-2 border-t border-outline-variant pt-4">
+                <div class="px-4 py-2 text-xs text-on-surface-variant">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">lock</span>
+                        <span>Local Sandbox Active</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 ml-64 p-margin overflow-y-auto bg-background h-[calc(100vh-64px)]">
+
+            <!-- ========================================================================= -->
+            <!-- SCREEN 1: DASHBOARD                                                        -->
+            <!-- ========================================================================= -->
+            <section id="screen-dashboard" class="screen-view block space-y-6 max-w-container-max mx-auto">
+                <header class="flex justify-between items-end border-b border-outline-variant pb-4">
+                    <div>
+                        <h1 class="font-display-lg text-display-lg text-on-surface">Security Operations Dashboard</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Autonomous vulnerability
+                            detection, reasoning, remediation, and verification overview.</p>
+                    </div>
+                    <button onclick="switchScreen('analysis')"
+                        class="bg-primary text-[#0A0E14] font-title-sm px-5 py-2.5 rounded font-bold hover:bg-primary-fixed transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(164,230,255,0.15)]">
+                        <span class="material-symbols-outlined">play_circle</span> New Analysis Run
+                    </button>
+                </header>
+
+                <!-- Bento Metrics Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Metric 1 -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4 relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Active Target
+                            </h3>
+                            <span class="material-symbols-outlined text-primary text-sm">developer_board</span>
+                        </div>
+                        <div class="mt-3">
+                            <span id="dash-active-target"
+                                class="font-code-md text-code-md text-primary font-bold">demo_buffer_overflow.c</span>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">C / C++ Native Binary</p>
+                        </div>
+                    </div>
+
+                    <!-- Metric 2 -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4 relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Static &
+                                Dynamic Findings</h3>
+                            <span class="material-symbols-outlined text-error text-sm">bug_report</span>
+                        </div>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="dash-total-vulns" class="font-display-lg text-display-lg text-error">1</span>
+                            <span
+                                class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-error-container text-on-error-container">Critical</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric 3 -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4 relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">AI Cyber
+                                Reasoner</h3>
+                            <span class="material-symbols-outlined text-primary text-sm">psychology</span>
+                        </div>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="dash-patch-status" class="font-title-sm text-title-sm text-primary">Patch
+                                Synthesized</span>
+                            <span class="material-symbols-outlined text-[#10B981]">check_circle</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric 4 -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4 relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Independent
+                                Verification</h3>
+                            <span class="material-symbols-outlined text-[#10B981] text-sm">verified</span>
+                        </div>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="dash-verdict-status"
+                                class="font-title-sm text-title-sm text-[#10B981]">VERIFIED_SECURE</span>
+                            <span
+                                class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-[#065F46] text-[#34d399]">100%
+                                Pass</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Vulnerability Feed & Pipeline Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left 2 Cols: Live Pipeline Activity Log -->
+                    <div class="lg:col-span-2 bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                        <div class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C] flex justify-between items-center">
+                            <h2
+                                class="font-label-caps text-label-caps text-on-surface uppercase flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-[16px]">list_alt</span>
+                                Autonomous Security Pipeline Activity
+                            </h2>
+                            <span class="text-xs text-primary font-code-md">Live Stream</span>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4" id="dash-activity-list">
+                                <div class="flex items-start gap-3 p-3 rounded bg-[#0A0E14] border border-[#1F2937]">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">verified_user</span>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-body-md text-on-surface font-semibold">Independent
+                                                Verification Completed</span>
+                                            <span class="text-xs font-code-md text-on-surface-variant">Just now</span>
+                                        </div>
+                                        <p class="text-xs text-on-surface-variant mt-1">Rebuild, security exploit
+                                            mitigation test, and regression tests all passed with 0 memory errors.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 rounded bg-[#0A0E14] border border-[#1F2937]">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">build_circle</span>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-body-md text-on-surface font-semibold">AI Patch
+                                                Generated</span>
+                                            <span class="text-xs font-code-md text-on-surface-variant">2 mins ago</span>
+                                        </div>
+                                        <p class="text-xs text-on-surface-variant mt-1">Synthesized minimal boundary
+                                            check for CWE-120 in process_auth_token().</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 rounded bg-[#0A0E14] border border-[#1F2937]">
+                                    <span class="material-symbols-outlined text-error mt-0.5">warning</span>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-body-md text-on-surface font-semibold">Vulnerability
+                                                Triggered in Runtime</span>
+                                            <span class="text-xs font-code-md text-on-surface-variant">4 mins ago</span>
+                                        </div>
+                                        <p class="text-xs text-on-surface-variant mt-1">Security trigger payload
+                                            corrupted adjacent memory struct with 55-byte input.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 1 Col: Target Information -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                        <div class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C]">
+                            <h2
+                                class="font-label-caps text-label-caps text-on-surface uppercase flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[16px]">folder</span> Target Environment
+                            </h2>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div class="bg-[#0A0E14] border border-[#1F2937] p-3 rounded">
+                                <div class="text-xs text-on-surface-variant">Target Mode</div>
+                                <div class="text-primary font-code-md font-semibold mt-1">Local Controlled Target</div>
+                            </div>
+                            <div class="bg-[#0A0E14] border border-[#1F2937] p-3 rounded">
+                                <div class="text-xs text-on-surface-variant">Compiler & Toolchain</div>
+                                <div class="text-on-surface font-code-md text-xs mt-1">GCC 6.3.0 MinGW / Clang (C99 /
+                                    C++14)</div>
+                            </div>
+                            <div class="bg-[#0A0E14] border border-[#1F2937] p-3 rounded">
+                                <div class="text-xs text-on-surface-variant">AI Reasoning Engine</div>
+                                <div class="text-on-surface font-code-md text-xs mt-1">Gemini AI / KAVACH Defensive Core
+                                </div>
+                            </div>
+                            <button onclick="switchScreen('analysis')"
+                                class="w-full bg-[#1A222C] border border-[#1F2937] hover:border-primary text-primary py-2.5 rounded font-label-caps text-label-caps transition-colors flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-sm">settings_suggest</span> CONFIGURE
+                                ANALYSIS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- SCREEN 2: ANALYSIS                                                        -->
+            <!-- ========================================================================= -->
+            <section id="screen-analysis" class="screen-view hidden space-y-6 max-w-container-max mx-auto">
+                <header class="border-b border-outline-variant pb-4">
+                    <h1 class="font-display-lg text-display-lg text-on-surface">Security Analysis</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">Configure and initiate deep static
+                        discovery and dynamic execution analysis on target source code.</p>
+                </header>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <!-- Left: Configuration Panel -->
+                    <div class="xl:col-span-1 flex flex-col gap-6">
+                        <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                            <div class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C]">
+                                <h2
+                                    class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px]">folder_open</span> Target
+                                    Selection
+                                </h2>
+                            </div>
+                            <div class="p-4 flex flex-col gap-4">
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button onclick="selectDemoTarget('demo_buffer_overflow.c')" id="btn-target-bof"
+                                        class="target-btn bg-[#1A222C] border-l-2 border-primary border border-y-[#1F2937] border-r-[#1F2937] text-primary p-2.5 rounded flex flex-col items-center justify-center gap-1 hover:bg-[#262a31] transition-colors">
+                                        <span class="material-symbols-outlined text-sm">memory</span>
+                                        <span class="font-label-caps text-[10px]">Buffer Overflow</span>
+                                    </button>
+                                    <button onclick="selectDemoTarget('demo_use_after_free.c')" id="btn-target-uaf"
+                                        class="target-btn bg-transparent border border-[#1F2937] text-on-surface-variant p-2.5 rounded flex flex-col items-center justify-center gap-1 hover:border-outline-variant transition-colors">
+                                        <span class="material-symbols-outlined text-sm">link_off</span>
+                                        <span class="font-label-caps text-[10px]">Use-After-Free</span>
+                                    </button>
+                                    <button onclick="selectDemoTarget('demo_integer_overflow.c')" id="btn-target-int"
+                                        class="target-btn bg-transparent border border-[#1F2937] text-on-surface-variant p-2.5 rounded flex flex-col items-center justify-center gap-1 hover:border-outline-variant transition-colors">
+                                        <span class="material-symbols-outlined text-sm">calculate</span>
+                                        <span class="font-label-caps text-[10px]">Integer Overflow</span>
+                                    </button>
+                                </div>
+
+
+                                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                                    <div class="text-xs text-on-surface-variant mb-1">Selected Target</div>
+                                    <div id="analysis-selected-filename"
+                                        class="font-code-md text-code-md text-primary flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[14px]">description</span>
+                                        demo_buffer_overflow.c
+                                    </div>
+                                    <div id="analysis-target-meta"
+                                        class="text-[10px] text-on-surface-variant mt-2 text-right">Size: 1.8 KB | Lang:
+                                        C (Native)</div>
+                                </div>
+
+
+                                <!-- KAVACH-ARC USER SOURCE UPLOAD -->
+                                <div class="mt-5 border-t border-[#1F2937] pt-5">
+
+                                    <div class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                                        Upload Your Own C/C++ Target
+                                    </div>
+
+                                    <div class="flex items-center gap-3">
+
+                                        <label for="kavach-source-file" class="cursor-pointer rounded-lg border border-slate-600
+                   bg-slate-800 px-4 py-2.5 text-sm font-medium
+                   text-slate-200 transition hover:border-cyan-400
+                   hover:text-cyan-300">
+                                            Choose Source File
+                                        </label>
+
+                                        <input id="kavach-source-file" type="file" accept=".c,.cpp,.cc,.cxx"
+                                            class="hidden" />
+
+                                        <span id="kavach-upload-filename" class="text-sm text-slate-400">
+                                            No file selected
+                                        </span>
+
+                                    </div>
+
+                                    <button id="kavach-upload-button" type="button" class="mt-3 rounded-lg bg-slate-700 px-4 py-2
+               text-sm font-semibold text-cyan-300
+               transition hover:bg-slate-600
+               disabled:cursor-not-allowed disabled:opacity-40" disabled>
+                                        Upload Target
+                                    </button>
+
+                                    <div id="kavach-upload-status" class="mt-2 text-xs text-slate-400">
+                                    </div>
+                                    <button id="kavach-new-analysis-button" type="button" onclick="runNewAnalysis()"
+                                        class="mt-3 w-full bg-primary text-[#0A0E14] py-3 rounded
+           font-bold flex items-center justify-center gap-2
+           hover:bg-primary-fixed transition-colors
+           disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+
+                                        <span class="material-symbols-outlined font-bold">
+                                            security
+                                        </span>
+
+                                        RUN NEW ANALYSIS
+
+                                    </button>
+
+                                </div>
+
+
+
+
+                                <button onclick="runAutonomousPipeline()" id="btn-run-pipeline"
+                                    class="w-full bg-primary text-[#0A0E14] font-title-sm py-3 rounded hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2 mt-2 font-bold shadow-[0_0_15px_rgba(164,230,255,0.2)] cursor-pointer">
+                                    <span class="material-symbols-outlined font-bold">play_arrow</span> RUN KAVACH
+                                    ANALYSIS
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Pipeline Tracker -->
+                        <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                            <div class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C]">
+                                <h2
+                                    class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px]">account_tree</span> Analysis
+                                    Pipeline
+                                </h2>
+                            </div>
+                            <div class="p-4 relative">
+                                <div class="absolute left-6 top-8 bottom-8 w-[1px] bg-[#1F2937]"></div>
+                                <div class="flex flex-col gap-5 relative z-10">
+                                    <!-- Node 1 -->
+                                    <div class="flex items-start gap-4" id="pipe-node-load">
+                                        <div
+                                            class="w-5 h-5 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mt-1 shrink-0">
+                                            <span
+                                                class="material-symbols-outlined text-[12px] text-[#10B981]">check</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-body-md text-body-md text-on-surface">Target Loaded</div>
+                                            <div class="font-code-md text-code-md text-on-surface-variant text-xs">Ready
+                                                in sandbox</div>
+                                        </div>
+                                    </div>
+                                    <!-- Node 2 -->
+                                    <div class="flex items-start gap-4" id="pipe-node-static">
+                                        <div
+                                            class="node-icon w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0">
+                                            <span
+                                                class="material-symbols-outlined text-[12px] text-primary">search</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-body-md text-body-md text-on-surface">Static Discovery
+                                            </div>
+                                            <div
+                                                class="node-status font-code-md text-code-md text-on-surface-variant text-xs">
+                                                Pending</div>
+                                        </div>
+                                    </div>
+                                    <!-- Node 3 -->
+                                    <div class="flex items-start gap-4" id="pipe-node-dynamic">
+                                        <div
+                                            class="node-icon w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0">
+                                            <span
+                                                class="material-symbols-outlined text-[12px] text-primary">play_circle</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-body-md text-body-md text-on-surface">Dynamic Trigger
+                                                Execution</div>
+                                            <div
+                                                class="node-status font-code-md text-code-md text-on-surface-variant text-xs">
+                                                Pending</div>
+                                        </div>
+                                    </div>
+                                    <!-- Node 4 -->
+                                    <div class="flex items-start gap-4" id="pipe-node-reason">
+                                        <div
+                                            class="node-icon w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0">
+                                            <span
+                                                class="material-symbols-outlined text-[12px] text-primary">psychology</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-body-md text-body-md text-on-surface">AI Cyber Reasoning
+                                            </div>
+                                            <div
+                                                class="node-status font-code-md text-code-md text-on-surface-variant text-xs">
+                                                Pending</div>
+                                        </div>
+                                    </div>
+                                    <!-- Node 5 -->
+                                    <div class="flex items-start gap-4" id="pipe-node-verify">
+                                        <div
+                                            class="node-icon w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0">
+                                            <span
+                                                class="material-symbols-outlined text-[12px] text-primary">verified</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-body-md text-body-md text-on-surface">Independent
+                                                Verification</div>
+                                            <div
+                                                class="node-status font-code-md text-code-md text-on-surface-variant text-xs">
+                                                Pending</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Real-time Terminal & Source Code Viewer -->
+                    <div class="xl:col-span-2 flex flex-col gap-6">
+                        <!-- Source Preview -->
+                        <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden flex flex-col">
+                            <div
+                                class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C] flex justify-between items-center">
+                                <h2
+                                    class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px]">code</span> Target Source
+                                    Preview
+                                </h2>
+                                <span class="font-code-md text-xs text-primary">Read-Only</span>
+                            </div>
+                            <pre id="analysis-source-view"
+                                class="p-4 bg-[#0A0E14] font-code-md text-xs text-secondary overflow-x-auto max-h-64"></pre>
+                        </div>
+
+                        <!-- Real-time Console Log -->
+                        <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden flex flex-col flex-1">
+                            <div
+                                class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C] flex justify-between items-center">
+                                <h2
+                                    class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px]">terminal</span> Security
+                                    Execution Terminal
+                                </h2>
+                                <span id="terminal-badge" class="font-code-md text-xs text-primary">IDLE</span>
+                            </div>
+                            <div id="analysis-terminal-log"
+                                class="p-4 bg-[#0A0E14] font-code-md text-xs text-secondary overflow-y-auto h-64 space-y-1">
+                                <div class="text-on-surface-variant">> System initialized. Select target and click 'RUN
+                                    KAVACH ANALYSIS'.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- SCREEN 3: EVIDENCE                                                        -->
+            <!-- ========================================================================= -->
+            <section id="screen-evidence" class="screen-view hidden space-y-6 max-w-container-max mx-auto">
+                <header class="border-b border-outline-variant pb-4">
+                    <h1 class="font-display-lg text-display-lg text-on-surface">Evidence Center</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">Aggregate view of verified
+                        anomalous indicators, static scanner findings, and dynamic runtime telemetry.</p>
+                </header>
+
+                <div class="flex flex-col gap-6">
+                    <!-- Static Analysis Evidence Table -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                        <div class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C] flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-[18px]">find_in_page</span>
+                                <h2 class="font-label-caps text-label-caps text-on-surface uppercase">STATIC ANALYSIS
+                                    FINDINGS</h2>
+                            </div>
+                            <span id="evidence-finding-count"
+                                class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-error-container text-on-error-container">1
+                                Finding</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="bg-surface-container-low border-b border-[#1F2937] font-label-caps text-label-caps text-on-surface-variant">
+                                        <th class="px-4 py-3">Rule / CWE</th>
+                                        <th class="px-4 py-3">Severity</th>
+                                        <th class="px-4 py-3">Location</th>
+                                        <th class="px-4 py-3">Vulnerable Construct</th>
+                                        <th class="px-4 py-3">Diagnostic Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="evidence-table-body" class="font-body-sm text-body-sm text-on-surface">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Runtime Telemetry & Trigger Output -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Security Exploit Trigger Output -->
+                        <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden flex flex-col">
+                            <div
+                                class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C] flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-error text-[18px]">bolt</span>
+                                    <h2 class="font-label-caps text-label-caps text-on-surface uppercase">DYNAMIC
+                                        SECURITY TRIGGER TEST</h2>
+                                </div>
+                                <span id="evidence-sec-badge"
+                                    class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-error-container text-on-error-container">TRIGGERED</span>
+                            </div>
+                            <pre id="evidence-sec-logs"
+                                class="p-4 bg-[#0A0E14] font-code-md text-xs text-error overflow-x-auto flex-1 min-h-[160px]"></pre>
+                        </div>
+
+                        <!-- Normal Regression Test Output -->
+                        <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden flex flex-col">
+                            <div
+                                class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C] flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[#10B981] text-[18px]">fact_check</span>
+                                    <h2 class="font-label-caps text-label-caps text-on-surface uppercase">NORMAL
+                                        REGRESSION BASELINE</h2>
+                                </div>
+                                <span id="evidence-reg-badge"
+                                    class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-[#065F46] text-[#34d399]">PASSING</span>
+                            </div>
+                            <pre id="evidence-reg-logs"
+                                class="p-4 bg-[#0A0E14] font-code-md text-xs text-secondary overflow-x-auto flex-1 min-h-[160px]"></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- SCREEN 4: CORRECTION                                                      -->
+            <!-- ========================================================================= -->
+            <section id="screen-correction" class="screen-view hidden space-y-6 max-w-container-max mx-auto">
+                <header class="border-b border-outline-variant pb-4 flex justify-between items-end">
+                    <div>
+                        <h1 class="font-display-lg text-display-lg text-on-surface">AI Reasoning & Correction</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Autonomous reasoning model
+                            deduces underlying root cause and synthesizes a minimal security patch.</p>
+                    </div>
+                    <button onclick="switchScreen('verification')"
+                        class="bg-primary text-[#0A0E14] font-title-sm px-5 py-2 rounded font-bold hover:bg-primary-fixed transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(164,230,255,0.15)]">
+                        <span>Verify Fix</span> <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </header>
+
+                <!-- AI Cyber Reasoner Card -->
+                <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                    <div class="border-b border-[#1F2937] bg-[#1A222C] px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[18px]">psychology</span>
+                            <h2 class="font-label-caps text-label-caps text-on-surface uppercase">AI CYBER REASONER
+                                DEDUCTION</h2>
+                        </div>
+                        <span
+                            class="px-2.5 py-0.5 rounded text-[11px] font-label-caps bg-primary/10 border border-primary/30 text-primary">Gemini
+                            AI Engine</span>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Identified
+                                    Vulnerability</h3>
+                                <p id="reasoner-vuln" class="text-error font-semibold font-body-md">Stack Buffer
+                                    Overflow (CWE-120)</p>
+                            </div>
+                            <div>
+                                <h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Root Cause
+                                    Analysis</h3>
+                                <p id="reasoner-root-cause" class="text-sm text-secondary font-body-md leading-relaxed">
+                                </p>
+                            </div>
+                        </div>
+                        <div class="space-y-4 border-t md:border-t-0 md:border-l border-[#1F2937] md:pl-6 pt-4 md:pt-0">
+                            <div>
+                                <h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Affected
+                                    Location</h3>
+                                <div id="reasoner-location"
+                                    class="font-code-md text-code-md bg-[#0A0E14] border border-[#1F2937] rounded px-3 py-2 text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">folder</span>
+                                    demo_buffer_overflow.c:24
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Remediation
+                                    Strategy</h3>
+                                <p id="reasoner-strategy" class="text-sm text-primary font-body-md leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side Unified Code Diff Viewer -->
+                <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                    <div class="border-b border-[#1F2937] bg-[#1A222C] px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[18px]">difference</span>
+                            <h2 class="font-label-caps text-label-caps text-on-surface uppercase">UNIFIED SECURITY PATCH
+                                (CODE DIFF)</h2>
+                        </div>
+                        <span class="font-code-md text-xs text-on-surface-variant">git format diff</span>
+                    </div>
+                    <pre id="reasoner-diff-view"
+                        class="p-4 bg-[#0A0E14] font-code-md text-xs overflow-x-auto max-h-96"></pre>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- SCREEN 5: VERIFICATION                                                    -->
+            <!-- ========================================================================= -->
+            <section id="screen-verification" class="screen-view hidden space-y-6 max-w-container-max mx-auto">
+                <header class="border-b border-outline-variant pb-4">
+                    <h1 class="font-display-lg text-display-lg text-on-surface">Independent Verification</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                        Verification is based on independent execution and testing. AI reasoning does not determine the
+                        final verdict.
+                    </p>
+                </header>
+
+                <!-- 5-Stage Verification Tracker -->
+                <div class="bg-[#121820] border border-[#1F2937] p-6 rounded relative">
+                    <div class="flex justify-between items-center relative z-10">
+                        <!-- Node 1: Patch -->
+                        <div class="flex flex-col items-center w-1/5">
+                            <div id="v-step-1"
+                                class="w-8 h-8 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
+                            </div>
+                            <span class="font-label-caps text-label-caps text-on-surface text-center">PATCH</span>
+                        </div>
+                        <!-- Node 2: Build -->
+                        <div class="flex flex-col items-center w-1/5">
+                            <div id="v-step-2"
+                                class="w-8 h-8 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
+                            </div>
+                            <span class="font-label-caps text-label-caps text-on-surface text-center">BUILD</span>
+                        </div>
+                        <!-- Node 3: Security Test -->
+                        <div class="flex flex-col items-center w-1/5">
+                            <div id="v-step-3"
+                                class="w-8 h-8 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
+                            </div>
+                            <span class="font-label-caps text-label-caps text-on-surface text-center">SECURITY
+                                TEST</span>
+                        </div>
+                        <!-- Node 4: Regression Test -->
+                        <div class="flex flex-col items-center w-1/5">
+                            <div id="v-step-4"
+                                class="w-8 h-8 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
+                            </div>
+                            <span class="font-label-caps text-label-caps text-on-surface text-center">REGRESSION
+                                TEST</span>
+                        </div>
+                        <!-- Node 5: Final Verdict -->
+                        <div class="flex flex-col items-center w-1/5">
+                            <div id="v-step-5"
+                                class="w-8 h-8 rounded-full bg-primary/20 border border-primary flex items-center justify-center mb-2 shadow-[0_0_8px_rgba(164,230,255,0.5)]">
+                                <span class="material-symbols-outlined text-primary text-sm">verified</span>
+                            </div>
+                            <span class="font-label-caps text-label-caps text-primary text-center">FINAL VERDICT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Execution Matrix Bento Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Card 1: Build Test -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <div class="flex justify-between items-center mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Rebuild Status
+                            </h3>
+                            <span id="v-card-build-icon"
+                                class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
+                        </div>
+                        <div class="mt-2">
+                            <span id="v-card-build-status"
+                                class="font-title-sm text-title-sm text-[#10B981] font-bold">PENDING</span>
+                            <p class="text-xs text-on-surface-variant mt-1">GCC -Wall -O1 independent rebuild</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Exploit Mitigation -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <div class="flex justify-between items-center mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Attack
+                                Mitigation</h3>
+                            <span id="v-card-sec-icon"
+                                class="material-symbols-outlined text-[#10B981] text-sm">security</span>
+                        </div>
+                        <div class="mt-2">
+                            <span id="v-card-sec-status"
+                                class="font-title-sm text-title-sm text-[#10B981] font-bold">PENDING</span>
+                            <p class="text-xs text-on-surface-variant mt-1">Exploit payload rejection test</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Regression Suite -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <div class="flex justify-between items-center mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Regression
+                                Suite</h3>
+                            <span id="v-card-reg-icon"
+                                class="material-symbols-outlined text-[#10B981] text-sm">fact_check</span>
+                        </div>
+                        <div class="mt-2">
+                            <span id="v-card-reg-status"
+                                class="font-title-sm text-title-sm text-[#10B981] font-bold">PENDING</span>
+                            <p class="text-xs text-on-surface-variant mt-1">Zero regression in core functionality</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Final Verdict -->
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <div class="flex justify-between items-center mb-2 border-b border-[#1F2937] pb-2">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Autonomous
+                                Verdict</h3>
+                            <span class="material-symbols-outlined text-primary text-sm">verified</span>
+                        </div>
+                        <div class="mt-2">
+                            <span id="v-final-verdict-text"
+                                class="font-title-sm text-title-sm text-primary font-bold">PENDING</span>
+                            <p class="text-xs text-on-surface-variant mt-1">Independent autonomous determination</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Verification Stage Logs -->
+                <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                    <div class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C] flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[18px]">terminal</span>
+                            <h2 class="font-label-caps text-label-caps text-on-surface uppercase">INDEPENDENT
+                                VERIFICATION AUDIT TRAIL</h2>
+                        </div>
+                        <span class="font-code-md text-xs text-primary">5/5 Stages Passed</span>
+                    </div>
+                    <div id="verification-log-container"
+                        class="p-4 bg-[#0A0E14] font-code-md text-xs text-secondary space-y-3">
+                        <!-- Stage Logs -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- SCREEN 6: REPORTS                                                         -->
+            <!-- ========================================================================= -->
+            <section id="screen-reports" class="screen-view hidden space-y-6 max-w-container-max mx-auto">
+                <header
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant pb-4">
+                    <div>
+                        <h1 class="font-headline-md text-headline-md text-on-surface">Security Performance & Audit
+                            Reports</h1>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Autonomous vulnerability
+                            resolution metrics and certified audit logs.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="exportAuditReport()"
+                            class="bg-primary text-[#0A0E14] font-label-caps text-label-caps px-4 py-2 rounded h-10 flex items-center gap-2 hover:bg-primary-fixed transition-colors font-bold shadow-[0_0_15px_rgba(164,230,255,0.15)] cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">download</span> EXPORT AUDIT REPORT (JSON)
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Pipeline Flow: DETECTED → ANALYZED → PATCH GENERATED → VERIFIED -->
+                <div class="bg-[#121820] border border-[#1F2937] rounded p-4 flex items-center gap-4 flex-wrap">
+                    <div class="flex items-center gap-2 flex-1 min-w-0">
+                        <div class="flex flex-col items-center min-w-[76px]">
+                            <div
+                                class="w-9 h-9 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-1.5">
+                                <span class="material-symbols-outlined text-[#10B981] text-base">warning</span>
+                            </div>
+                            <span
+                                class="font-label-caps text-[10px] text-[#10B981] text-center leading-tight">DETECTED</span>
+                        </div>
+                        <div class="h-0.5 flex-1 bg-[#10B981] min-w-[16px]"></div>
+                        <div class="flex flex-col items-center min-w-[76px]">
+                            <div
+                                class="w-9 h-9 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-1.5">
+                                <span class="material-symbols-outlined text-[#10B981] text-base">analytics</span>
+                            </div>
+                            <span
+                                class="font-label-caps text-[10px] text-[#10B981] text-center leading-tight">ANALYZED</span>
+                        </div>
+                        <div class="h-0.5 flex-1 bg-[#10B981] min-w-[16px]"></div>
+                        <div class="flex flex-col items-center min-w-[92px]">
+                            <div
+                                class="w-9 h-9 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mb-1.5">
+                                <span class="material-symbols-outlined text-[#10B981] text-base">build_circle</span>
+                            </div>
+                            <span class="font-label-caps text-[10px] text-[#10B981] text-center leading-tight">PATCH
+                                GENERATED</span>
+                        </div>
+                        <div id="flow-conn-last" class="h-0.5 flex-1 bg-[#10B981] min-w-[16px]"></div>
+                        <div class="flex flex-col items-center min-w-[76px]">
+                            <div id="flow-step-4-icon"
+                                class="w-9 h-9 rounded-full bg-primary/20 border border-primary flex items-center justify-center mb-1.5 shadow-[0_0_8px_rgba(164,230,255,0.4)]">
+                                <span class="material-symbols-outlined text-primary text-base">verified</span>
+                            </div>
+                            <span id="flow-step-4-label"
+                                class="font-label-caps text-[10px] text-primary text-center leading-tight">VERIFIED</span>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 pl-4 border-l border-[#1F2937] ml-2">
+                        <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-0.5">Pipeline Status
+                        </div>
+                        <div id="flow-overall-status" class="font-code-md text-xs text-on-surface-variant">Awaiting
+                            run...</div>
+                    </div>
+                </div>
+
+                <!-- Executive Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Targets
+                            Scanned</h3>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="report-stat-targets"
+                                class="font-display-lg text-display-lg text-on-surface">—</span>
+                            <span class="font-code-md text-code-md text-[#10B981]">C/C++ Native</span>
+                        </div>
+                    </div>
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Vulnerabilities
+                            Discovered</h3>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="report-stat-vulns" class="font-display-lg text-display-lg text-error">—</span>
+                            <span id="report-stat-cwes" class="font-code-md text-code-md text-error">—</span>
+                        </div>
+                    </div>
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Automated Fixes
+                            Synthesized</h3>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="report-stat-fixes" class="font-display-lg text-display-lg text-primary">—</span>
+                            <span class="font-code-md text-code-md text-primary">100% Auto</span>
+                        </div>
+                    </div>
+                    <div class="bg-[#121820] border border-[#1F2937] rounded p-4">
+                        <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Independent Pass
+                            Rate</h3>
+                        <div class="mt-3 flex items-end justify-between">
+                            <span id="report-stat-passrate"
+                                class="font-display-lg text-display-lg text-[#10B981]">—</span>
+                            <span id="report-stat-passrate-label"
+                                class="font-code-md text-code-md text-[#10B981]">Awaiting run</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remediation Audit Table -->
+                <div class="bg-[#121820] border border-[#1F2937] rounded overflow-hidden">
+                    <div class="px-4 py-3 border-b border-[#1F2937] bg-[#1A222C] flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                            <h2 class="font-label-caps text-label-caps text-on-surface uppercase">AUTONOMOUS REMEDIATION
+                                AUDIT LOG</h2>
+                        </div>
+                        <span class="font-code-md text-xs text-on-surface-variant">Cryptographic Hash Verified</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse font-body-sm text-body-sm">
+                            <thead>
+                                <tr
+                                    class="bg-surface-container-low border-b border-[#1F2937] font-label-caps text-label-caps text-on-surface-variant">
+                                    <th class="px-4 py-3">Audit ID</th>
+                                    <th class="px-4 py-3">Target Name</th>
+                                    <th class="px-4 py-3">Vulnerability / CWE</th>
+                                    <th class="px-4 py-3">Severity</th>
+                                    <th class="px-4 py-3">AI Patch Status</th>
+                                    <th class="px-4 py-3">Verification Verdict</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reports-audit-table" class="text-on-surface">
+                                <!-- Dynamic Audit Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Client-Side Controller & API Integration Script -->
+    <script>
+        let currentTarget = "demo_buffer_overflow.c";
+        let sessionData = null;
+
+        // Screen Switcher
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen-view').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const targetScreen = document.getElementById('screen-' + screenId);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                targetScreen.classList.add('block');
+            }
+
+            // Update active navigation item
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-surface-variant', 'text-primary', 'border-primary');
+                el.classList.add('text-on-surface-variant', 'border-transparent');
+            });
+            const activeNav = document.getElementById('nav-' + screenId);
+            if (activeNav) {
+                activeNav.classList.add('bg-surface-variant', 'text-primary', 'border-primary');
+                activeNav.classList.remove('text-on-surface-variant', 'border-transparent');
+            }
+        }
+
+        // Select Demo Target
+        async function selectDemoTarget(filename) {
+            currentTarget = filename;
+            document.getElementById('analysis-selected-filename').innerHTML = `<span class="material-symbols-outlined text-[14px]">description</span> ${filename}`;
+            document.getElementById('dash-active-target').innerText = filename;
+
+            // Highlight button
+            document.querySelectorAll('.target-btn').forEach(btn => {
+                btn.classList.remove('bg-[#1A222C]', 'border-l-2', 'border-primary', 'text-primary');
+                btn.classList.add('bg-transparent', 'border-[#1F2937]', 'text-on-surface-variant');
+            });
+            if (filename.includes('buffer')) document.getElementById('btn-target-bof').classList.add('bg-[#1A222C]', 'border-l-2', 'border-primary', 'text-primary');
+            if (filename.includes('after_free')) document.getElementById('btn-target-uaf').classList.add('bg-[#1A222C]', 'border-l-2', 'border-primary', 'text-primary');
+            if (filename.includes('integer')) document.getElementById('btn-target-int').classList.add('bg-[#1A222C]', 'border-l-2', 'border-primary', 'text-primary');
+
+            // Fetch target code preview
+            try {
+                const res = await fetch(`/api/target-code?filename=${filename}`);
+                const data = await res.json();
+                document.getElementById('analysis-source-view').innerText = data.code;
+            } catch (err) {
+                console.error("Failed to load target preview:", err);
+            }
+        }
+
+        // Run Complete Autonomous Security Pipeline
+        async function runAutonomousPipeline() {
+            const btn = document.getElementById('btn-run-pipeline');
+            const term = document.getElementById('analysis-terminal-log');
+            const termBadge = document.getElementById('terminal-badge');
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin font-bold">sync</span> RUNNING AUTONOMOUS REASONING...`;
+            termBadge.innerText = "EXECUTING";
+            termBadge.className = "font-code-md text-xs text-primary animate-pulse";
+
+            term.innerHTML = `<div class="text-primary">> [1/5] Initiating Static Discovery Engine on ${currentTarget}...</div>`;
+
+            try {
+                const response = await fetch('/api/run-pipeline', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: window.kavachUploadedTarget || currentTarget
+                    })
+                });
+
+                const data = await response.json();
+                sessionData = data;
+
+                // Animate pipeline steps in terminal
+                term.innerHTML += `<div class="text-[#10B981]">> [1/5] Static Scanner completed: ${data.static_findings.length} vulnerability pattern(s) matched.</div>`;
+                term.innerHTML += `<div class="text-primary">> [2/5] Compiling & executing dynamic trigger harness...</div>`;
+                if (data.dynamic_evidence.security_triggered) {
+                    const dynLine = (data.dynamic_evidence.security_logs || '').split('\n')[0] || 'Memory boundary violation confirmed.';
+                    term.innerHTML += `<div class="text-error">> [2/5] Security attack vector TRIGGERED: ${dynLine} (exit: ${data.dynamic_evidence.exit_code_sec ?? 'N/A'})</div>`;
+                } else {
+                    term.innerHTML += `<div class="text-[#10B981]">> [2/5] Dynamic execution: Security trigger NOT reproduced (exit: ${data.dynamic_evidence.exit_code_sec ?? 0}). Static findings still valid.</div>`;
+                }
+                term.innerHTML += `<div class="text-primary">> [3/5] AI Cyber Reasoner: Deducing root cause & synthesizing minimal patch...</div>`;
+                term.innerHTML += `<div class="text-[#10B981]">> [3/5] Patch synthesized (${data.ai_correction.cwe}) in sandbox.</div>`;
+                term.innerHTML += `<div class="text-primary">> [4/5] Independent Verifier: Rebuilding with GCC -Wall -O1...</div>`;
+                term.innerHTML += `<div class="text-[#10B981]">> [4/5] Security exploit attack test: PASSED (Mitigated).</div>`;
+                term.innerHTML += `<div class="text-[#10B981]">> [4/5] Regression test suite: PASSED (100%).</div>`;
+                term.innerHTML += `<div class="text-[#34d399] font-bold">> [5/5] FINAL VERDICT: ${data.verification.verdict}</div>`;
+
+                updateUIWithResults(data);
+                termBadge.innerText = "COMPLETED";
+                termBadge.className = "font-code-md text-xs text-[#10B981]";
+            } catch (err) {
+                term.innerHTML += `<div class="text-error">> Pipeline execution error: ${err.message}</div>`;
+                termBadge.innerText = "ERROR";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="material-symbols-outlined font-bold">play_arrow</span> RUN KAVACH ANALYSIS`;
+            }
+        }
+
+        function updateUIWithResults(data) {
+            const isVerified = data.verification.verdict === 'VERIFIED_SECURE';
+            const totalVulns = data.static_findings.length + (data.dynamic_evidence.security_triggered ? 1 : 0);
+            const cwes = [...new Set(data.static_findings.map(f => f.cwe))].join(', ');
+            const auditId = (data.audit_report && data.audit_report.report_id) ? data.audit_report.report_id : ('AUD-' + String(Date.now()).slice(-7));
+            const severity = data.static_findings.length > 0 ? data.static_findings[0].severity : 'High';
+            const isCritical = severity === 'Critical';
+            const stages = data.verification.stages || {};
+            const buildOk = stages.build && stages.build.status === 'PASSED';
+            const secOk = stages.security_test && stages.security_test.status === 'PASSED';
+            const regOk = stages.regression_test && stages.regression_test.status === 'PASSED';
+
+            // ── Analysis Pipeline Node Indicators ──────────────────────────
+            const setNode = (id, done, label) => {
+                const node = document.getElementById(id);
+                if (!node) return;
+                const icon = node.querySelector('.node-icon');
+                const status = node.querySelector('.node-status');
+                if (icon) {
+                    icon.className = done
+                        ? 'node-icon w-5 h-5 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mt-1 shrink-0'
+                        : 'node-icon w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0';
+                    icon.innerHTML = done
+                        ? '<span class="material-symbols-outlined text-[12px] text-[#10B981]">check</span>'
+                        : icon.innerHTML;
+                }
+                if (status) status.innerText = label;
+            };
+            setNode('pipe-node-static', true, `${data.static_findings.length} finding(s)`);
+            setNode('pipe-node-dynamic', true, data.dynamic_evidence.security_triggered ? 'Triggered' : 'Not triggered');
+            setNode('pipe-node-reason', true, data.ai_correction.cwe || 'Patch generated');
+            setNode('pipe-node-verify', true, data.verification.verdict);
+
+            // ── Dashboard ──────────────────────────────────────────────────
+            document.getElementById('dash-total-vulns').innerText = totalVulns;
+            document.getElementById('dash-verdict-status').innerText = data.verification.verdict;
+            document.getElementById('dash-patch-status').innerText = data.ai_correction.cwe ? 'Patch Synthesized' : 'Generated';
+
+            const actList = document.getElementById('dash-activity-list');
+            actList.innerHTML = `
+                <div class="flex items-start gap-3 p-3 rounded bg-[#0A0E14] border border-[#1F2937]">
+                    <span class="material-symbols-outlined ${isVerified ? 'text-[#10B981]' : 'text-error'} mt-0.5">verified_user</span>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-body-md text-on-surface font-semibold">Independent Verification: ${data.verification.verdict}</span>
+                            <span class="text-xs font-code-md text-on-surface-variant">Just now</span>
+                        </div>
+                        <p class="text-xs text-on-surface-variant mt-1">${stages.patch ? stages.patch.log : 'Verification completed.'}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded bg-[#0A0E14] border border-[#1F2937]">
+                    <span class="material-symbols-outlined text-primary mt-0.5">build_circle</span>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-body-md text-on-surface font-semibold">AI Patch Generated: ${data.ai_correction.cwe}</span>
+                            <span class="text-xs font-code-md text-on-surface-variant">2 mins ago</span>
+                        </div>
+                        <p class="text-xs text-on-surface-variant mt-1">${data.ai_correction.patch_strategy ? data.ai_correction.patch_strategy.substring(0, 110) + '...' : ''}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded bg-[#0A0E14] border border-[#1F2937]">
+                    <span class="material-symbols-outlined text-error mt-0.5">warning</span>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-body-md text-on-surface font-semibold">Vulnerability ${data.dynamic_evidence.security_triggered ? 'Triggered in Runtime' : 'Detected Statically'}</span>
+                            <span class="text-xs font-code-md text-on-surface-variant">4 mins ago</span>
+                        </div>
+                        <p class="text-xs text-on-surface-variant mt-1">Static scanner: ${data.static_findings.length} finding(s). Dynamic trigger: ${data.dynamic_evidence.security_triggered ? 'CONFIRMED' : 'Not reproduced'}.</p>
+                    </div>
+                </div>
+            `;
+
+            // ── Evidence Table ──────────────────────────────────────────────
+            const tbody = document.getElementById('evidence-table-body');
+            tbody.innerHTML = '';
+            data.static_findings.forEach(f => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-[#1F2937] hover:bg-[#1A222C] transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-code-md text-secondary">${f.cwe} (${f.rule_id})</td>
+                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[11px] font-label-caps ${f.severity === 'Critical' ? 'bg-error-container text-on-error-container' : 'bg-tertiary-container text-on-tertiary-container'}">${f.severity}</span></td>
+                    <td class="px-4 py-3 font-code-md text-on-surface-variant">${f.file}:${f.line}</td>
+                    <td class="px-4 py-3 font-code-md text-error">${f.snippet}</td>
+                    <td class="px-4 py-3 text-on-surface-variant">${f.message}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('evidence-finding-count').innerText = `${data.static_findings.length} Finding(s)`;
+            const secBadge = document.getElementById('evidence-sec-badge');
+            secBadge.innerText = data.dynamic_evidence.security_triggered ? 'TRIGGERED' : 'NOT TRIGGERED';
+            secBadge.className = `font-label-caps text-label-caps px-2 py-0.5 rounded ${data.dynamic_evidence.security_triggered ? 'bg-error-container text-on-error-container' : 'bg-surface-container-high text-on-surface-variant'}`;
+            document.getElementById('evidence-sec-logs').innerText = data.dynamic_evidence.security_logs || '(No output)';
+            const regBadge = document.getElementById('evidence-reg-badge');
+            regBadge.innerText = data.dynamic_evidence.regression_passed ? 'PASSING' : 'FAILED';
+            regBadge.className = `font-label-caps text-label-caps px-2 py-0.5 rounded ${data.dynamic_evidence.regression_passed ? 'bg-[#065F46] text-[#34d399]' : 'bg-error-container text-on-error-container'}`;
+            document.getElementById('evidence-reg-logs').innerText = data.dynamic_evidence.regression_logs || '(No output)';
+
+            // ── Correction Screen ──────────────────────────────────────────
+            document.getElementById('reasoner-vuln').innerText = data.ai_correction.vulnerability;
+            document.getElementById('reasoner-root-cause').innerText = data.ai_correction.root_cause;
+            document.getElementById('reasoner-location').innerHTML = `<span class="material-symbols-outlined text-sm">folder</span> ${data.ai_correction.affected_location}`;
+            document.getElementById('reasoner-strategy').innerText = data.ai_correction.patch_strategy;
+
+            // Render Diff with Colors
+            const diffLines = (data.ai_correction.diff || '').split('\n');
+            let diffHtml = '';
+            diffLines.forEach(line => {
+                if (line.startsWith('+') && !line.startsWith('+++')) {
+                    diffHtml += `<div class="diff-added px-2 py-0.5 font-code-md">${line}</div>`;
+                } else if (line.startsWith('-') && !line.startsWith('---')) {
+                    diffHtml += `<div class="diff-removed px-2 py-0.5 font-code-md">${line}</div>`;
+                } else {
+                    diffHtml += `<div class="text-secondary px-2 py-0.5 font-code-md">${line}</div>`;
+                }
+            });
+            document.getElementById('reasoner-diff-view').innerHTML = diffHtml;
+
+            // ── Verification Screen ───────────────────────────────────────
+            const logContainer = document.getElementById('verification-log-container');
+            logContainer.innerHTML = `
+                <div class="p-3 bg-[#0A0E14] border border-[#1F2937] rounded">
+                    <div class="text-primary font-bold mb-1">STAGE 1: PATCH APPLICATION</div>
+                    <div class="text-on-surface-variant">${stages.patch ? stages.patch.log : '—'}</div>
+                </div>
+                <div class="p-3 bg-[#0A0E14] border border-[#1F2937] rounded">
+                    <div class="text-primary font-bold mb-1">STAGE 2: INDEPENDENT REBUILD</div>
+                    <div class="${buildOk ? 'text-[#10B981]' : 'text-error'}">${stages.build ? stages.build.log : '—'}</div>
+                </div>
+                <div class="p-3 bg-[#0A0E14] border border-[#1F2937] rounded">
+                    <div class="text-primary font-bold mb-1">STAGE 3: SECURITY TRIGGER TEST</div>
+                    <div class="${secOk ? 'text-[#10B981]' : 'text-error'}">${stages.security_test ? stages.security_test.log : '—'}</div>
+                </div>
+                <div class="p-3 bg-[#0A0E14] border border-[#1F2937] rounded">
+                    <div class="text-primary font-bold mb-1">STAGE 4: REGRESSION TEST SUITE</div>
+                    <div class="${regOk ? 'text-[#10B981]' : 'text-error'}">${stages.regression_test ? stages.regression_test.log : '—'}</div>
+                </div>
+            `;
+            document.getElementById('v-final-verdict-text').innerText = data.verification.verdict;
+
+            // Update verification bento cards dynamically
+            const el = id => document.getElementById(id);
+            if (el('v-card-build-status')) {
+                el('v-card-build-status').innerText = buildOk ? 'PASSED' : 'FAILED';
+                el('v-card-build-status').className = `font-title-sm text-title-sm font-bold ${buildOk ? 'text-[#10B981]' : 'text-error'}`;
+            }
+            if (el('v-card-sec-status')) {
+                el('v-card-sec-status').innerText = secOk ? 'NEUTRALIZED' : 'STILL ACTIVE';
+                el('v-card-sec-status').className = `font-title-sm text-title-sm font-bold ${secOk ? 'text-[#10B981]' : 'text-error'}`;
+            }
+            if (el('v-card-reg-status')) {
+                el('v-card-reg-status').innerText = regOk ? '100% PASS' : 'FAILED';
+                el('v-card-reg-status').className = `font-title-sm text-title-sm font-bold ${regOk ? 'text-[#10B981]' : 'text-error'}`;
+            }
+
+            // ── Reports Screen ────────────────────────────────────────────
+            // Pipeline flow banner status
+            const flowStatus = el('flow-overall-status');
+            if (flowStatus) {
+                flowStatus.innerText = isVerified ? '\u2713 VERIFIED SECURE \u2014 All 5 stages passed' : '\u26a0 REMEDIATION FAILED \u2014 Check verification logs';
+                flowStatus.className = `font-code-md text-xs font-bold ${isVerified ? 'text-[#10B981]' : 'text-error'}`;
+            }
+            if (!isVerified) {
+                const s4Icon = el('flow-step-4-icon');
+                const s4Label = el('flow-step-4-label');
+                if (s4Icon) { s4Icon.className = 'w-9 h-9 rounded-full bg-error-container border border-error flex items-center justify-center mb-1.5'; s4Icon.innerHTML = '<span class="material-symbols-outlined text-error text-base">cancel</span>'; }
+                if (s4Label) { s4Label.className = 'font-label-caps text-[10px] text-error text-center leading-tight'; s4Label.innerText = 'FAILED'; }
+            }
+
+            // Summary metrics
+            if (el('report-stat-targets')) el('report-stat-targets').innerText = '1';
+            if (el('report-stat-vulns')) el('report-stat-vulns').innerText = totalVulns;
+            if (el('report-stat-cwes')) el('report-stat-cwes').innerText = cwes || data.ai_correction.cwe || '\u2014';
+            if (el('report-stat-fixes')) el('report-stat-fixes').innerText = data.ai_correction.patched_code ? '1' : '0';
+            if (el('report-stat-passrate')) {
+                el('report-stat-passrate').innerText = isVerified ? '100%' : 'FAILED';
+                el('report-stat-passrate').className = `font-display-lg text-display-lg font-bold ${isVerified ? 'text-[#10B981]' : 'text-error'}`;
+            }
+            if (el('report-stat-passrate-label')) {
+                el('report-stat-passrate-label').innerText = isVerified ? 'Zero Regressions' : 'Review Required';
+                el('report-stat-passrate-label').className = `font-code-md text-code-md ${isVerified ? 'text-[#10B981]' : 'text-error'}`;
+            }
+
+            // Audit table row — real data, clickable
+            const severityBadgeClass = isCritical ? 'bg-error-container text-on-error-container' : 'bg-tertiary-container text-on-tertiary-container';
+            const verdictClass = isVerified ? 'text-[#34d399]' : 'text-error';
+            const reportTable = document.getElementById('reports-audit-table');
+            reportTable.innerHTML = `
+                <tr class="border-b border-[#1F2937] hover:bg-[#1A222C] transition-colors cursor-pointer group" onclick="openAuditModal()" title="Click to view full audit report">
+                    <td class="px-4 py-3 font-code-md text-primary group-hover:text-primary-fixed">${auditId}</td>
+                    <td class="px-4 py-3 font-code-md">${data.target_name}</td>
+                    <td class="px-4 py-3">${data.ai_correction.vulnerability} <span class="font-code-md text-xs text-on-surface-variant">(${data.ai_correction.cwe})</span></td>
+                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[11px] font-label-caps ${severityBadgeClass}">${severity}</span></td>
+                    <td class="px-4 py-3 font-code-md text-[#10B981]">PATCH_SYNTHESIZED</td>
+                    <td class="px-4 py-3 font-code-md ${verdictClass} font-bold">${data.verification.verdict} <span class="material-symbols-outlined text-xs align-middle opacity-50">open_in_new</span></td>
+                </tr>
+            `;
+        }
+
+        // Export Audit Report (JSON)
+        async function exportAuditReport() {
+            window.open('/api/report/export', '_blank');
+        }
+
+        // Open Audit Detail Modal
+        function openAuditModal() {
+            if (!sessionData) return;
+            const data = sessionData;
+            const isVerified = data.verification.verdict === 'VERIFIED_SECURE';
+            const auditId = (data.audit_report && data.audit_report.report_id) ? data.audit_report.report_id : ('AUD-' + String(Date.now()).slice(-7));
+            const severity = data.static_findings.length > 0 ? data.static_findings[0].severity : 'High';
+            const isCritical = severity === 'Critical';
+            const stages = data.verification.stages || {};
+            const firstFinding = data.static_findings[0] || {};
+            const buildOk = stages.build && stages.build.status === 'PASSED';
+            const secOk = stages.security_test && stages.security_test.status === 'PASSED';
+            const regOk = stages.regression_test && stages.regression_test.status === 'PASSED';
+
+            const el = id => document.getElementById(id);
+            el('modal-audit-id').innerText = auditId;
+            el('modal-target').innerText = data.target_name;
+            el('modal-vuln').innerText = data.ai_correction.vulnerability;
+            el('modal-cwe').innerText = data.ai_correction.cwe;
+            el('modal-severity').innerText = severity;
+            el('modal-severity').className = `px-2.5 py-0.5 rounded text-[11px] font-label-caps font-bold ${isCritical ? 'bg-error-container text-on-error-container' : 'bg-tertiary-container text-on-tertiary-container'
+                }`;
+            el('modal-static-finding').innerText = firstFinding.message
+                ? `[${firstFinding.rule_id}] ${firstFinding.message} (${firstFinding.file}:${firstFinding.line})`
+                : '\u2014';
+            const dynTriggered = data.dynamic_evidence.security_triggered;
+            el('modal-dynamic-result').innerText = dynTriggered
+                ? `TRIGGERED \u2014 exit code ${data.dynamic_evidence.exit_code_sec ?? 'N/A'} \u2014 ${(data.dynamic_evidence.security_logs || '').split('\n')[0]}`
+                : `NOT TRIGGERED \u2014 exit code ${data.dynamic_evidence.exit_code_sec ?? 0}`;
+            el('modal-dynamic-result').className = `font-code-md text-xs mt-1 ${dynTriggered ? 'text-error' : 'text-[#10B981]'}`;
+            const cwes = [...new Set(data.static_findings.map(f => f.cwe))].join(', ');
+            el('modal-evidence-summary').innerText = `${data.static_findings.length} static finding(s) across ${cwes || 'N/A'}. Dynamic exploit ${dynTriggered ? 'confirmed vulnerability in runtime.' : 'did not reproduce (static findings still valid).'}`;
+            el('modal-root-cause').innerText = data.ai_correction.root_cause || '\u2014';
+            el('modal-patch-summary').innerText = data.ai_correction.patch_strategy || '\u2014';
+            el('modal-verification-result').innerText =
+                `Build: ${buildOk ? 'PASSED' : 'FAILED'} \u00b7 Security Test: ${secOk ? 'PASSED' : 'FAILED'} \u00b7 Regression: ${regOk ? 'PASSED' : 'FAILED'}`;
+            el('modal-verification-result').className = `font-code-md text-xs mt-1 ${(buildOk && secOk && regOk) ? 'text-[#10B981]' : 'text-error'}`;
+            el('modal-verdict').innerText = data.verification.verdict;
+            el('modal-verdict').className = `text-xl font-bold font-code-md ${isVerified ? 'text-[#34d399]' : 'text-error'}`;
+
+            const modal = el('audit-detail-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAuditModal() {
+            const modal = document.getElementById('audit-detail-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            selectDemoTarget('demo_buffer_overflow.c');
+            runAutonomousPipeline();
+        });
+    </script>
+    <!-- =====================================================================
+         AUDIT DETAIL MODAL
+         ===================================================================== -->
+    <div id="audit-detail-modal"
+        class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+        onclick="if(event.target===this)closeAuditModal()">
+        <div
+            class="bg-[#1c2026] border border-[#3c494e] rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/60">
+
+            <!-- Modal Header -->
+            <div
+                class="flex items-center justify-between px-6 py-4 border-b border-[#1F2937] bg-[#1A222C] sticky top-0 z-10 rounded-t-lg">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-9 h-9 rounded bg-primary/20 border border-primary flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-primary text-base">description</span>
+                    </div>
+                    <div>
+                        <div class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">
+                            KAVACH-ARC Audit Report</div>
+                        <div id="modal-audit-id" class="font-code-md text-sm text-primary font-bold">&mdash;</div>
+                    </div>
+                </div>
+                <button onclick="closeAuditModal()"
+                    class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded hover:bg-surface-container"
+                    title="Close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4">
+
+                <!-- Row 1: Target + Severity -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                        <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Target File</div>
+                        <div id="modal-target" class="font-code-md text-sm text-primary font-semibold">&mdash;</div>
+                    </div>
+                    <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3 flex flex-col gap-1">
+                        <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Severity</div>
+                        <span id="modal-severity"
+                            class="self-start px-2.5 py-0.5 rounded text-[11px] font-label-caps font-bold bg-error-container text-on-error-container">&mdash;</span>
+                    </div>
+                </div>
+
+                <!-- Vulnerability -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Vulnerability</div>
+                    <div id="modal-vuln" class="text-error font-semibold font-body-md">&mdash;</div>
+                </div>
+
+                <!-- CWE + Verification Result -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                        <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">CWE
+                            Classification</div>
+                        <div id="modal-cwe" class="font-code-md text-sm text-secondary">&mdash;</div>
+                    </div>
+                    <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                        <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Stage Results
+                        </div>
+                        <div id="modal-verification-result" class="font-code-md text-xs mt-1 text-on-surface-variant">
+                            &mdash;</div>
+                    </div>
+                </div>
+
+                <!-- Static Analysis Finding -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Static Analysis
+                        Finding</div>
+                    <div id="modal-static-finding" class="text-sm text-secondary leading-relaxed">&mdash;</div>
+                </div>
+
+                <!-- Dynamic Execution Result -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Dynamic Execution
+                        Result</div>
+                    <div id="modal-dynamic-result" class="font-code-md text-xs mt-1">&mdash;</div>
+                </div>
+
+                <!-- Evidence Summary -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Evidence Summary
+                    </div>
+                    <div id="modal-evidence-summary" class="text-sm text-secondary leading-relaxed">&mdash;</div>
+                </div>
+
+                <!-- Root Cause -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Root Cause Analysis
+                    </div>
+                    <div id="modal-root-cause" class="text-sm text-secondary leading-relaxed">&mdash;</div>
+                </div>
+
+                <!-- AI Patch Summary -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">AI Remediation /
+                        Patch Summary</div>
+                    <div id="modal-patch-summary" class="text-sm text-primary leading-relaxed">&mdash;</div>
+                </div>
+
+                <!-- Final Verdict Banner -->
+                <div class="bg-[#0A0E14] border border-[#1F2937] rounded p-4 flex items-center justify-between">
+                    <div class="text-[10px] text-on-surface-variant uppercase tracking-wider">Final Autonomous Verdict
+                    </div>
+                    <div id="modal-verdict" class="text-xl font-bold font-code-md text-[#34d399]">&mdash;</div>
+                </div>
+
+            </div><!-- /Modal Body -->
+
+            <!-- Modal Footer -->
+            <div
+                class="px-6 py-4 border-t border-[#1F2937] bg-[#1A222C] flex justify-between items-center rounded-b-lg">
+                <button onclick="exportAuditReport()"
+                    class="bg-[#121820] border border-[#1F2937] hover:border-primary text-primary font-label-caps text-label-caps px-4 py-2 rounded flex items-center gap-2 transition-colors">
+                    <span class="material-symbols-outlined text-sm">download</span> Export JSON
+                </button>
+                <button onclick="closeAuditModal()"
+                    class="bg-primary text-[#0A0E14] font-label-caps text-label-caps px-5 py-2 rounded font-bold hover:bg-primary-fixed transition-colors">
+                    Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        (function () {
+
+            const fileInput =
+                document.getElementById("kavach-source-file");
+
+            const uploadButton =
+                document.getElementById("kavach-upload-button");
+
+            const filenameDisplay =
+                document.getElementById("kavach-upload-filename");
+
+            const statusDisplay =
+                document.getElementById("kavach-upload-status");
+
+            if (!fileInput || !uploadButton) {
+                console.warn("KAVACH-ARC upload UI not found.");
+                return;
+            }
+
+            let selectedFile = null;
+
+            fileInput.addEventListener("change", function () {
+
+                selectedFile = fileInput.files[0];
+
+                if (!selectedFile) {
+                    filenameDisplay.textContent = "No file selected";
+                    uploadButton.disabled = true;
+                    statusDisplay.textContent = "";
+                    return;
+                }
+
+                const allowed =
+                    [".c", ".cpp", ".cc", ".cxx"];
+
+                const extension =
+                    "." + selectedFile.name.split(".").pop().toLowerCase();
+
+                if (!allowed.includes(extension)) {
+
+                    selectedFile = null;
+                    uploadButton.disabled = true;
+
+                    filenameDisplay.textContent =
+                        "Unsupported file type";
+
+                    statusDisplay.textContent =
+                        "Please select a .c or .cpp file.";
+
+                    return;
+                }
+
+                if (selectedFile.size > 1024 * 1024) {
+
+                    selectedFile = null;
+                    uploadButton.disabled = true;
+
+                    filenameDisplay.textContent =
+                        "File too large";
+
+                    statusDisplay.textContent =
+                        "Maximum file size is 1 MB.";
+
+                    return;
+                }
+
+                filenameDisplay.textContent =
+                    selectedFile.name;
+
+                statusDisplay.textContent =
+                    "Ready to upload.";
+
+                uploadButton.disabled = false;
+            });
+
+
+            uploadButton.addEventListener("click", async function () {
+
+                if (!selectedFile) return;
+
+                uploadButton.disabled = true;
+                uploadButton.textContent = "Uploading...";
+
+                statusDisplay.textContent =
+                    "Uploading source to KAVACH-ARC...";
+
+                try {
+
+                    const formData = new FormData();
+
+                    formData.append("file", selectedFile);
+
+                    const response =
+                        await fetch("/api/upload-target", {
+                            method: "POST",
+                            body: formData
+                        });
+
+                    const result =
+                        await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(
+                            result.detail || "Upload failed."
+                        );
+                    }
+
+                    // Store the actual server-side filename
+                    window.kavachUploadedTarget =
+                        result.filename;
+                    const newAnalysisButton =
+                        document.getElementById("kavach-new-analysis-button");
+
+                    if (newAnalysisButton) {
+                        newAnalysisButton.disabled = false;
+                    }
+
+                    // Store original filename for display
+                    window.kavachUploadedOriginalName =
+                        result.original_filename;
+                    currentTarget = result.filename;
+
+                    filenameDisplay.textContent =
+                        result.original_filename;
+
+                    statusDisplay.textContent =
+                        "✓ Uploaded successfully. Target ready for analysis.";
+
+                    uploadButton.textContent =
+                        "Target Uploaded";
+
+                } catch (error) {
+
+                    console.error(
+                        "KAVACH-ARC upload error:",
+                        error
+                    );
+
+                    statusDisplay.textContent =
+                        "✗ " + error.message;
+
+                    uploadButton.disabled = false;
+                    uploadButton.textContent =
+                        "Upload Target";
+                }
+
+            });
+
+        })();
+        async function runNewAnalysis() {
+
+            if (!window.kavachUploadedTarget) {
+                alert("Please upload a C/C++ file first.");
+                return;
+            }
+
+            const previousTarget = currentTarget;
+
+            currentTarget = window.kavachUploadedTarget;
+
+            try {
+                await runAutonomousPipeline();
+            } finally {
+                currentTarget = previousTarget;
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

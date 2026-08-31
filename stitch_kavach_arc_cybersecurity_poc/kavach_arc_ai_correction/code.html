@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KAVACH-ARC | AI Reasoning &amp; Correction</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "surface-container-highest": "#31353c",
+                        "outline": "#859399",
+                        "tertiary-fixed": "#ffddb1",
+                        "inverse-primary": "#00677f",
+                        "surface-container": "#1c2026",
+                        "surface-variant": "#31353c",
+                        "surface-dim": "#10141a",
+                        "secondary": "#c1c7d2",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-container": "#00566a",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "outline-variant": "#3c494e",
+                        "on-primary-fixed": "#001f28",
+                        "background": "#10141a",
+                        "on-secondary-fixed-variant": "#414750",
+                        "on-surface": "#dfe2eb",
+                        "surface-tint": "#4cd6ff",
+                        "primary-fixed": "#b7eaff",
+                        "on-primary": "#003543",
+                        "primary-container": "#00d1ff",
+                        "on-tertiary": "#442b00",
+                        "tertiary": "#ffd59c",
+                        "on-background": "#dfe2eb",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#dde3ee",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "surface-container-high": "#262a31",
+                        "inverse-surface": "#dfe2eb",
+                        "on-surface-variant": "#bbc9cf",
+                        "surface-container-low": "#181c22",
+                        "on-secondary-fixed": "#161c24",
+                        "tertiary-container": "#feb127",
+                        "tertiary-fixed-dim": "#ffba49",
+                        "primary": "#a4e6ff",
+                        "surface-bright": "#353940",
+                        "inverse-on-surface": "#2d3137",
+                        "on-secondary-container": "#b6bcc7",
+                        "primary-fixed-dim": "#4cd6ff",
+                        "secondary-fixed-dim": "#c1c7d2",
+                        "on-primary-fixed-variant": "#004e60",
+                        "secondary-container": "#464c55",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#2b3139",
+                        "on-tertiary-container": "#6b4700",
+                        "surface": "#10141a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "gutter": "16px",
+                        "margin": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "450" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0A0E14; color: #dfe2eb; }
+        .diff-added { background-color: rgba(6, 95, 70, 0.2); }
+        .diff-removed { background-color: rgba(153, 27, 27, 0.2); }
+        .pulse-primary { box-shadow: 0 0 0 1px #a4e6ff; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0px rgba(164, 230, 255, 0.7); } 70% { box-shadow: 0 0 0 4px rgba(164, 230, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(164, 230, 255, 0); } }
+    </style>
+</head>
+<body class="font-body-md text-body-md bg-background antialiased flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16 bg-surface-container border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary tracking-tight">KAVACH-ARC | Autonomous Reasoning &amp; Correction</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="User profile" class="object-cover w-full h-full" data-alt="A professional headshot of a cybersecurity analyst in a dimly lit, high-tech operations center. The lighting is cool and blue-toned, emphasizing focus and precision. The style is ultra-realistic and corporate, suitable for a dark-mode enterprise application profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk6Hh5t2l24tFG-6QDf09oeQUZzGY0Y1QeeRfeUjgJ3ZP-VwRLsGDPKa6vWTLUTlQRyPMOlH7ge3Jr3mChyY5X7HeYpCj9cTTZpaRkGLBbI_o6-5U8NsqcCLONNmkW6hxBnsKjrnElvGyYmlAV-08HosZQBA9sWtcX8HOdCRhi94LX5X9t9mtOwym9ZbJAOMA23swbPg8JXTG2MIDx-jSYSeT1z9hrmo8W4-WTv9rsRbBBWJDn2k8D"/>
+</div>
+</div>
+</header>
+<!-- Main Layout -->
+<div class="flex flex-1 pt-16">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-margin z-40 bg-surface-container-low border-r border-outline-variant hidden md:flex">
+<div class="px-4 pb-4 border-b border-outline-variant mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-primary">KAVACH-ARC</div>
+<div class="text-on-surface-variant text-xs">Precision Security</div>
+</div>
+</div>
+<div class="mt-4 px-3 py-1.5 bg-surface-container-high rounded border border-outline-variant text-center">
+<span class="text-xs text-secondary">Status:</span> <span class="text-primary text-xs font-semibold">Operational</span>
+</div>
+</div>
+<ul class="flex flex-col flex-1 space-y-1">
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span>Analysis</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">inventory_2</span>
+<span>Evidence</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-primary bg-surface-variant border-l-4 border-primary px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">build_circle</span>
+<span>Correction</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">verified_user</span>
+<span>Verification</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
+<span>Reports</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto px-4 pt-4 border-t border-outline-variant">
+<ul class="flex flex-col space-y-1">
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-2 hover:bg-surface-container-highest transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+<span class="text-sm">Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-2 hover:bg-surface-container-highest transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-margin overflow-y-auto">
+<div class="max-w-container-max mx-auto space-y-6">
+<!-- Header -->
+<div class="flex flex-col gap-2 border-b border-outline-variant pb-4">
+<h1 class="font-display-lg text-display-lg text-on-surface">AI Reasoning &amp; Correction</h1>
+<div class="flex items-center gap-3 text-sm">
+<span class="px-2 py-1 bg-surface-container-high border border-outline-variant rounded font-label-caps text-label-caps text-on-surface-variant">ID: COR-9284-AX</span>
+<span class="flex items-center gap-1 text-tertiary-container"><span class="material-symbols-outlined text-base">warning</span> High Severity</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-base">smart_toy</span> AI-generated correction</span>
+<span class="px-2 py-1 bg-surface-container border border-tertiary-container rounded text-tertiary-fixed font-label-caps text-label-caps ml-auto pulse-primary">Status: Awaiting Verification</span>
+</div>
+</div>
+<!-- AI Cyber Reasoner Section -->
+<section class="bg-[#121820] border border-[#1F2937] rounded-lg overflow-hidden">
+<div class="border-b border-[#1F2937] bg-[#1A222C] px-4 py-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<h2 class="font-label-caps text-label-caps text-on-surface">AI CYBER REASONER</h2>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-4">
+<div>
+<h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Vulnerability</h3>
+<p class="text-error font-medium">SQL Injection (CWE-89)</p>
+</div>
+<div>
+<h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Root Cause</h3>
+<p class="text-sm text-secondary">Unsanitized user input `req.body.userId` is directly concatenated into the SQL query string in the authentication middleware, allowing malicious payloads to alter query logic.</p>
+</div>
+</div>
+<div class="space-y-4 border-l border-[#1F2937] pl-6">
+<div>
+<h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Affected Location</h3>
+<div class="font-code-md text-code-md bg-[#0A0E14] border border-[#1F2937] rounded px-3 py-2 text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">folder</span> src/middleware/auth.js:42
+                                </div>
+</div>
+<div>
+<h3 class="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Patch Strategy</h3>
+<p class="text-sm text-primary">Implement parameterized queries using prepared statements. Replace string concatenation with parameter placeholders to ensure input is treated strictly as data, not executable code.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Code Comparison Section -->
+<section class="bg-[#121820] border border-[#1F2937] rounded-lg overflow-hidden">
+<div class="border-b border-[#1F2937] bg-[#1A222C] px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">difference</span>
+<h2 class="font-label-caps text-label-caps text-on-surface">CODE COMPARISON</h2>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-px bg-[#1F2937]">
+<!-- Before -->
+<div class="bg-[#0A0E14] flex flex-col">
+<div class="px-4 py-2 border-b border-[#1F2937] bg-[#121820] flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm">remove_circle</span>
+<span class="text-xs font-medium text-secondary">BEFORE (Vulnerable)</span>
+</div>
+<div class="p-4 font-code-md text-code-md text-secondary overflow-x-auto">
+<pre><code><span class="text-[#859399]">39 |</span> const userId = req.body.userId;
+<span class="text-[#859399]">40 |</span> 
+<span class="text-[#859399]">41 |</span> <span class="text-[#859399]">// Construct query</span>
+<span class="text-[#859399] diff-removed bg-opacity-20 bg-error">42 | const query = "SELECT * FROM users WHERE id = '" + userId + "'";</span>
+<span class="text-[#859399]">43 |</span> 
+<span class="text-[#859399] diff-removed bg-opacity-20 bg-error">44 | db.query(query, (err, result) =&gt; {</span>
+<span class="text-[#859399]">45 |</span>     if (err) return res.status(500).send("Error");
+<span class="text-[#859399]">46 |</span>     if (result.length &gt; 0) {
+<span class="text-[#859399]">47 |</span>         next();
+<span class="text-[#859399]">48 |</span>     }
+<span class="text-[#859399]">49 |</span> });</code></pre>
+</div>
+</div>
+<!-- After -->
+<div class="bg-[#0A0E14] flex flex-col">
+<div class="px-4 py-2 border-b border-[#1F2937] bg-[#121820] flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">add_circle</span>
+<span class="text-xs font-medium text-secondary">AFTER (Patched)</span>
+</div>
+<div class="p-4 font-code-md text-code-md text-secondary overflow-x-auto">
+<pre><code><span class="text-[#859399]">39 |</span> const userId = req.body.userId;
+<span class="text-[#859399]">40 |</span> 
+<span class="text-[#859399]">41 |</span> <span class="text-[#859399]">// Construct query</span>
+<span class="text-[#859399] diff-added bg-opacity-20 bg-primary">42 | const query = "SELECT * FROM users WHERE id = ?";</span>
+<span class="text-[#859399]">43 |</span> 
+<span class="text-[#859399] diff-added bg-opacity-20 bg-primary">44 | db.query(query, [userId], (err, result) =&gt; {</span>
+<span class="text-[#859399]">45 |</span>     if (err) return res.status(500).send("Error");
+<span class="text-[#859399]">46 |</span>     if (result.length &gt; 0) {
+<span class="text-[#859399]">47 |</span>         next();
+<span class="text-[#859399]">48 |</span>     }
+<span class="text-[#859399]">49 |</span> });</code></pre>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Bar -->
+<div class="flex justify-end gap-4 mt-8 border-t border-outline-variant pt-6">
+<button class="px-6 py-2 border border-[#1F2937] text-on-surface rounded font-label-caps text-label-caps hover:bg-surface-container-high transition-colors">
+                        REJECT PATCH
+                    </button>
+<button class="px-6 py-2 bg-primary text-[#0A0E14] rounded font-label-caps text-label-caps hover:bg-primary-fixed transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">fact_check</span>
+                        INITIATE VERIFICATION
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KAVACH-ARC | Security Analysis Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#b7eaff",
+                        "tertiary-container": "#feb127",
+                        "background": "#10141a",
+                        "on-secondary": "#2b3139",
+                        "outline": "#859399",
+                        "primary": "#a4e6ff",
+                        "secondary-container": "#464c55",
+                        "on-tertiary-container": "#6b4700",
+                        "on-primary": "#003543",
+                        "surface": "#10141a",
+                        "primary-container": "#00d1ff",
+                        "secondary-fixed-dim": "#c1c7d2",
+                        "surface-variant": "#31353c",
+                        "outline-variant": "#3c494e",
+                        "surface-dim": "#10141a",
+                        "on-surface": "#dfe2eb",
+                        "on-primary-container": "#00566a",
+                        "on-tertiary-fixed": "#291800",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#31353c",
+                        "tertiary": "#ffd59c",
+                        "on-tertiary": "#442b00",
+                        "on-background": "#dfe2eb",
+                        "tertiary-fixed": "#ffddb1",
+                        "inverse-surface": "#dfe2eb",
+                        "surface-container-high": "#262a31",
+                        "surface-tint": "#4cd6ff",
+                        "tertiary-fixed-dim": "#ffba49",
+                        "surface-bright": "#353940",
+                        "on-secondary-container": "#b6bcc7",
+                        "surface-container": "#1c2026",
+                        "on-surface-variant": "#bbc9cf",
+                        "primary-fixed-dim": "#4cd6ff",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#001f28",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "on-error": "#690005",
+                        "inverse-primary": "#00677f",
+                        "secondary-fixed": "#dde3ee",
+                        "on-secondary-fixed": "#161c24",
+                        "on-secondary-fixed-variant": "#414750",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-fixed-variant": "#004e60",
+                        "surface-container-low": "#181c22",
+                        "inverse-on-surface": "#2d3137",
+                        "secondary": "#c1c7d2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "margin": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "450" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0A0E14; color: #dfe2eb; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-fill { font-variation-settings: 'FILL' 1; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="font-body-md text-body-md bg-surface-container-lowest h-screen overflow-hidden flex font-sans antialiased">
+<!-- SideNavBar -->
+<nav class="flex flex-col h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant w-64 z-20">
+<div class="p-margin border-b border-outline-variant flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-primary truncate w-full text-center">KAVACH-ARC</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-unit">Autonomous Reasoning</span>
+</div>
+<div class="p-margin flex-grow overflow-y-auto scrollbar-hide">
+<button class="w-full bg-primary text-surface font-label-caps text-label-caps py-2 rounded mb-gutter hover:opacity-90 transition-opacity">
+                New Analysis
+            </button>
+<ul class="space-y-unit">
+<li>
+<a class="flex items-center gap-3 p-3 rounded text-on-surface-variant hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">target</span>
+<span class="font-label-caps text-label-caps">Target</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 p-3 rounded bg-secondary-container text-on-secondary-container border-l-4 border-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-caps text-label-caps">Discover</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 p-3 rounded text-on-surface-variant hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-caps text-label-caps">Reason</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 p-3 rounded text-on-surface-variant hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-label-caps text-label-caps">Correct</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 p-3 rounded text-on-surface-variant hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-caps text-label-caps">Verify</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="p-margin border-t border-outline-variant mt-auto">
+<ul class="space-y-unit">
+<li>
+<a class="flex items-center gap-3 p-3 rounded text-on-surface-variant hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps">Docs</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 p-3 rounded text-on-surface-variant hover:bg-surface-variant transition-all duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+</li>
+</ul>
+<div class="mt-gutter flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<span class="material-symbols-outlined text-outline">account_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface">System Operator</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="ml-64 flex-1 flex flex-col h-screen overflow-hidden bg-background">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-margin h-16 w-full bg-surface-container dark:bg-surface-container border-b border-outline-variant z-10 shrink-0">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tight">KAVACH-ARC</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 hover:text-primary transition-colors opacity-80" href="#">Analysis</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Reports</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center px-3 py-1 bg-surface-variant rounded border border-outline-variant text-on-surface-variant font-label-caps text-label-caps">
+<span class="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+                     SYSTEM READY
+                </div>
+<button class="text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<main class="flex-1 overflow-y-auto p-margin pb-32">
+<div class="max-w-container-max mx-auto space-y-margin">
+<!-- Page Header -->
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Security Analysis</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-unit">Discover, reason, correct and verify software vulnerabilities.</p>
+</div>
+<!-- 1. Target Selection & 2. Pipeline -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-margin">
+<!-- Target Selection Card -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-gutter col-span-1 lg:col-span-1">
+<div class="border-b border-[#1F2937] pb-unit mb-unit flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase">Target Selection</h2>
+</div>
+<div class="flex-1 flex flex-col gap-unit">
+<div class="flex gap-2 mb-2">
+<button class="flex-1 bg-surface-variant text-on-surface font-label-caps text-label-caps py-1.5 rounded border border-[#374151] hover:border-primary transition-colors">Built-in Demo</button>
+<button class="flex-1 bg-transparent text-outline font-label-caps text-label-caps py-1.5 rounded border border-[#1F2937] hover:border-[#374151] transition-colors">Upload Source</button>
+</div>
+<div class="bg-[#0A0E14] border border-[#1F2937] p-2 rounded flex items-center justify-between mb-4">
+<span class="font-code-md text-code-md text-on-surface">buffer_overflow.cpp</span>
+<span class="material-symbols-outlined text-outline text-sm">check_circle</span>
+</div>
+<button class="w-full mt-auto bg-primary text-surface font-label-caps text-label-caps py-2.5 rounded hover:bg-primary-fixed transition-colors">
+                                RUN KAVACH ANALYSIS
+                            </button>
+</div>
+</div>
+<!-- Pipeline Tracker -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-gutter col-span-1 lg:col-span-2">
+<div class="border-b border-[#1F2937] pb-unit mb-gutter flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase">Analysis Pipeline</h2>
+</div>
+<div class="flex-1 flex items-center justify-between relative px-4">
+<!-- Connecting Line -->
+<div class="absolute left-8 right-8 top-1/2 h-px bg-[#1F2937] -translate-y-1/2 z-0"></div>
+<!-- Nodes -->
+<div class="flex flex-col items-center gap-2 z-10 bg-[#121820] px-2">
+<div class="w-6 h-6 rounded-full bg-[#065F46] border-2 border-[#10B981] flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white icon-fill">check</span>
+</div>
+<span class="font-label-caps text-label-caps text-[#10B981]">TARGET</span>
+</div>
+<div class="flex flex-col items-center gap-2 z-10 bg-[#121820] px-2">
+<div class="w-6 h-6 rounded-full bg-[#065F46] border-2 border-[#10B981] flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white icon-fill">check</span>
+</div>
+<span class="font-label-caps text-label-caps text-[#10B981]">DISCOVER</span>
+</div>
+<div class="flex flex-col items-center gap-2 z-10 bg-[#121820] px-2">
+<div class="w-6 h-6 rounded-full bg-[#065F46] border-2 border-[#10B981] flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white icon-fill">check</span>
+</div>
+<span class="font-label-caps text-label-caps text-[#10B981]">REASON</span>
+</div>
+<div class="flex flex-col items-center gap-2 z-10 bg-[#121820] px-2">
+<div class="w-6 h-6 rounded-full bg-[#065F46] border-2 border-[#10B981] flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white icon-fill">check</span>
+</div>
+<span class="font-label-caps text-label-caps text-[#10B981]">CORRECT</span>
+</div>
+<div class="flex flex-col items-center gap-2 z-10 bg-[#121820] px-2">
+<div class="w-6 h-6 rounded-full bg-[#1A222C] border-2 border-primary shadow-[0_0_8px_rgba(164,230,255,0.5)] flex items-center justify-center animate-pulse">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<span class="font-label-caps text-label-caps text-primary">VERIFY</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3 Columns: Discovery, Reasoner, Patch -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-margin">
+<!-- Discovery -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-gutter">
+<div class="border-b border-[#1F2937] pb-unit mb-gutter flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">search</span> Discovery
+                            </h2>
+</div>
+<div class="space-y-4">
+<div class="bg-[#991B1B]/20 border border-[#991B1B] rounded p-3">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-[#FCA5A5] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> VULNERABILITY DETECTED
+                                    </span>
+<span class="font-label-caps text-label-caps px-1.5 py-0.5 bg-[#991B1B] text-white rounded">HIGH SEVERITY</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface mb-1">Type: Stack-based Buffer Overflow</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Location: <span class="font-code-md">buffer_overflow.cpp:14</span></p>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 p-2 bg-[#0A0E14] border border-[#1F2937] rounded text-center">
+<span class="font-label-caps text-label-caps text-outline block mb-1">Static</span>
+<span class="material-symbols-outlined text-primary text-[18px]">check</span>
+</div>
+<div class="flex-1 p-2 bg-[#0A0E14] border border-[#1F2937] rounded text-center">
+<span class="font-label-caps text-label-caps text-outline block mb-1">Dynamic</span>
+<span class="material-symbols-outlined text-primary text-[18px]">check</span>
+</div>
+<div class="flex-1 p-2 bg-[#0A0E14] border border-[#1F2937] rounded text-center">
+<span class="font-label-caps text-label-caps text-outline block mb-1">ASan</span>
+<span class="material-symbols-outlined text-primary text-[18px]">check</span>
+</div>
+</div>
+<button class="w-full bg-transparent text-white font-label-caps text-label-caps py-2 rounded border border-[#1F2937] hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">visibility</span> VIEW EVIDENCE
+                            </button>
+</div>
+</div>
+<!-- AI Cyber Reasoner -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-gutter relative overflow-hidden">
+<!-- AI stylistic background accent -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
+<div class="border-b border-[#1F2937] pb-unit mb-gutter flex justify-between items-center relative z-10">
+<h2 class="font-label-caps text-label-caps text-primary uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">psychology</span> AI Cyber Reasoner
+                            </h2>
+</div>
+<div class="space-y-4 relative z-10 flex-1">
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1">Root Cause</h3>
+<p class="font-body-sm text-body-sm text-on-surface bg-[#0A0E14] border border-[#1F2937] p-2 rounded border-l-2 border-l-primary">
+                                    The function <code class="font-code-md text-primary">strcpy</code> does not check the length of the input string before copying it into the fixed-size array <code class="font-code-md text-primary">buf[8]</code>. Inputs exceeding 8 bytes will overwrite adjacent stack memory.
+                                </p>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1">Patch Strategy</h3>
+<p class="font-body-sm text-body-sm text-on-surface bg-[#0A0E14] border border-[#1F2937] p-2 rounded">
+                                    Replace <code class="font-code-md">strcpy</code> with bounded <code class="font-code-md">strncpy</code>. Ensure the destination buffer is explicitly null-terminated to prevent subsequent read over-runs.
+                                </p>
+</div>
+</div>
+<button class="w-full mt-4 bg-transparent text-white font-label-caps text-label-caps py-2 rounded border border-[#1F2937] hover:bg-surface-variant transition-colors relative z-10">
+                            VIEW FULL REASONING
+                        </button>
+</div>
+<!-- Patch View -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-0 overflow-hidden col-span-1 lg:col-span-1 lg:row-span-2">
+<div class="border-b border-[#1F2937] p-gutter pb-unit flex justify-between items-center bg-[#121820]">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">difference</span> Patch View
+                            </h2>
+</div>
+<div class="flex-1 bg-[#0A0E14] flex flex-col overflow-hidden font-code-md text-code-md">
+<!-- Left: Deletion -->
+<div class="flex-1 border-b border-[#1F2937] flex">
+<div class="w-10 bg-[#121820] border-r border-[#1F2937] text-right pr-2 py-2 text-outline select-none opacity-50">
+                                    13<br/>14<br/>15
+                                </div>
+<div class="flex-1 py-2 overflow-x-auto whitespace-pre bg-[#991B1B]/10">
+<div class="px-2 text-on-surface opacity-70">  char buf[8];</div>
+<div class="px-2 text-[#FCA5A5] bg-[#991B1B]/20 w-full inline-block">- strcpy(buf, input);</div>
+<div class="px-2 text-on-surface opacity-70">  return 0;</div>
+</div>
+</div>
+<!-- Right: Addition -->
+<div class="flex-1 flex">
+<div class="w-10 bg-[#121820] border-r border-[#1F2937] text-right pr-2 py-2 text-outline select-none opacity-50">
+                                    13<br/>14<br/>15<br/>16
+                                </div>
+<div class="flex-1 py-2 overflow-x-auto whitespace-pre bg-[#065F46]/10">
+<div class="px-2 text-on-surface opacity-70">  char buf[8];</div>
+<div class="px-2 text-[#6EE7B7] bg-[#065F46]/20 w-full inline-block">+ strncpy(buf, input, sizeof(buf)-1);</div>
+<div class="px-2 text-[#6EE7B7] bg-[#065F46]/20 w-full inline-block">+ buf[sizeof(buf)-1] = '\0';</div>
+<div class="px-2 text-on-surface opacity-70">  return 0;</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Evidence Timeline & Verification Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-margin">
+<!-- Evidence Timeline -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-gutter col-span-1 lg:col-span-1">
+<div class="border-b border-[#1F2937] pb-unit mb-gutter flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">history</span> Evidence Log
+                            </h2>
+</div>
+<div class="flex-1 relative pl-4 border-l border-[#1F2937] space-y-4 py-2">
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#10B981] border-2 border-[#121820]"></div>
+<p class="font-code-md text-code-md text-on-surface-variant text-[11px] mb-0.5">14:02:11.045</p>
+<p class="font-body-sm text-body-sm text-on-surface">Target loaded: buffer_overflow.cpp</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#EF4444] border-2 border-[#121820]"></div>
+<p class="font-code-md text-code-md text-on-surface-variant text-[11px] mb-0.5">14:02:15.892</p>
+<p class="font-body-sm text-body-sm text-[#FCA5A5]">SIGSEGV caught in symbolic execution</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-primary border-2 border-[#121820]"></div>
+<p class="font-code-md text-code-md text-on-surface-variant text-[11px] mb-0.5">14:02:22.103</p>
+<p class="font-body-sm text-body-sm text-on-surface">Patch synthesized by Reasoner</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#3B82F6] border-2 border-[#121820] animate-pulse"></div>
+<p class="font-code-md text-code-md text-on-surface-variant text-[11px] mb-0.5">14:02:28.441</p>
+<p class="font-body-sm text-body-sm text-primary">Running verification suites...</p>
+</div>
+</div>
+</div>
+<!-- Verification Grid -->
+<div class="bg-[#121820] border border-[#1F2937] rounded flex flex-col p-gutter col-span-1 lg:col-span-2">
+<div class="border-b border-[#1F2937] pb-unit mb-gutter flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">verified</span> Verification
+                            </h2>
+</div>
+<!-- Success Banner -->
+<div class="bg-[#065F46]/20 border border-[#10B981] rounded p-3 mb-4 flex items-center justify-center gap-2 text-[#10B981]">
+<span class="material-symbols-outlined icon-fill">verified_user</span>
+<span class="font-title-sm text-title-sm">PATCH VERIFIED</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2 flex-1">
+<div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3 flex flex-col items-center justify-center text-center gap-1 border-t-2 border-t-[#10B981]">
+<span class="font-label-caps text-label-caps text-outline">Build</span>
+<span class="font-body-sm text-body-sm text-[#10B981] font-bold">PASS</span>
+</div>
+<div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3 flex flex-col items-center justify-center text-center gap-1 border-t-2 border-t-[#10B981]">
+<span class="font-label-caps text-label-caps text-outline">Security</span>
+<span class="font-body-sm text-body-sm text-[#10B981] font-bold">PASS</span>
+</div>
+<div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3 flex flex-col items-center justify-center text-center gap-1 border-t-2 border-t-[#10B981]">
+<span class="font-label-caps text-label-caps text-outline">Regression</span>
+<span class="font-body-sm text-body-sm text-[#10B981] font-bold">PASS</span>
+</div>
+<div class="bg-[#0A0E14] border border-[#1F2937] rounded p-3 flex flex-col items-center justify-center text-center gap-1 border-t-2 border-t-[#10B981]">
+<span class="font-label-caps text-label-caps text-outline">Integrity</span>
+<span class="font-body-sm text-body-sm text-[#10B981] font-bold">PASS</span>
+</div>
+</div>
+<div class="mt-4 flex gap-4 justify-end">
+<button class="bg-transparent text-white font-label-caps text-label-caps py-2 px-4 rounded border border-[#1F2937] hover:border-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">description</span> GENERATE REPORT
+                            </button>
+<button class="bg-primary text-surface font-label-caps text-label-caps py-2 px-4 rounded hover:bg-primary-fixed transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">download</span> DOWNLOAD
+                            </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="fixed bottom-0 w-full flex justify-between items-center px-margin py-2 z-40 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant pl-[calc(16rem+24px)] pr-margin">
+<span class="font-code-md text-code-md text-outline dark:text-outline">v2.4.0-STABLE | KAVACH-ARC</span>
+<div class="flex gap-4">
+<a class="font-code-md text-code-md text-outline hover:text-on-surface transition-opacity" href="#">System Audit</a>
+<a class="font-code-md text-code-md text-outline hover:text-on-surface transition-opacity" href="#">Legal</a>
+<a class="font-code-md text-code-md text-outline hover:text-on-surface transition-opacity" href="#">API Access</a>
+</div>
+</footer>
+</body></html>

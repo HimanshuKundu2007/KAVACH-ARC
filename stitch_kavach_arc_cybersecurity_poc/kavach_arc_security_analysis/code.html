@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KAVACH-ARC | Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "surface-container-highest": "#31353c",
+                        "outline": "#859399",
+                        "tertiary-fixed": "#ffddb1",
+                        "inverse-primary": "#00677f",
+                        "surface-container": "#1c2026",
+                        "surface-variant": "#31353c",
+                        "surface-dim": "#10141a",
+                        "secondary": "#c1c7d2",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-container": "#00566a",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "outline-variant": "#3c494e",
+                        "on-primary-fixed": "#001f28",
+                        "background": "#10141a",
+                        "on-secondary-fixed-variant": "#414750",
+                        "on-surface": "#dfe2eb",
+                        "surface-tint": "#4cd6ff",
+                        "primary-fixed": "#b7eaff",
+                        "on-primary": "#003543",
+                        "primary-container": "#00d1ff",
+                        "on-tertiary": "#442b00",
+                        "tertiary": "#ffd59c",
+                        "on-background": "#dfe2eb",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#dde3ee",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "surface-container-high": "#262a31",
+                        "inverse-surface": "#dfe2eb",
+                        "on-surface-variant": "#bbc9cf",
+                        "surface-container-low": "#181c22",
+                        "on-secondary-fixed": "#161c24",
+                        "tertiary-container": "#feb127",
+                        "tertiary-fixed-dim": "#ffba49",
+                        "primary": "#a4e6ff",
+                        "surface-bright": "#353940",
+                        "inverse-on-surface": "#2d3137",
+                        "on-secondary-container": "#b6bcc7",
+                        "primary-fixed-dim": "#4cd6ff",
+                        "secondary-fixed-dim": "#c1c7d2",
+                        "on-primary-fixed-variant": "#004e60",
+                        "secondary-container": "#464c55",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#2b3139",
+                        "on-tertiary-container": "#6b4700",
+                        "surface": "#10141a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "gutter": "16px",
+                        "margin": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "450" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0A0E14; color: #dfe2eb; }
+        .node-pulse { box-shadow: 0 0 8px 1px rgba(164, 230, 255, 0.5); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopNavBar -->
+<header class="bg-surface-container dark:bg-surface-container text-primary dark:text-primary font-label-caps text-label-caps docked full-width top-0 border-b border-outline-variant flat no shadows fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tight">KAVACH-ARC | Autonomous Reasoning &amp; Correction</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6">
+<!-- Top Nav Items (hidden on this screen per intent, but structurally present) -->
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors active:opacity-80">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors active:opacity-80">settings</span>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant cursor-pointer active:opacity-80" data-alt="A small, stylized profile avatar of a security analyst in a dark, high-tech control room setting. Cinematic lighting, sharp focus. Cypersecurity aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJFNXRQpx4pr97pVsDWnqc3xq6JxmL-K-9LsfiiLsR4FR7XqKE-RJMSR7PhJ9b5wvkswDO_0JbXK_zpoXhjrw5J7bsmKpPQ6nQgQDSbbQqu_PVw65_QMCa0eAmOMnvTmEfebCQKKS4gidUa9GAK-0-e_sh2q08EKch3Lz5x398rvdmV1HeMi6kMAnDgIy5bVAETZP_JF1pOm6r2nKyt4_owj9xRzZBbupxZgBRFLvcd1A9mg5lc1eh"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 pt-16">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-surface-container-low text-primary dark:text-primary font-body-md text-body-md docked left-0 h-full w-64 border-r border-outline-variant flat no shadows fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-margin z-40">
+<div class="px-4 mb-6">
+<div class="flex items-center gap-3 mb-2">
+<img alt="System Logo" class="w-8 h-8 rounded-DEFAULT" data-alt="A minimalist, glowing cyan geometric logo representing an AI security system against a deep dark navy background. Professional, technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJWWFhoABS64-_TqLLuYWGbw4Rf7m86PSfjC6qk85h-7LiAR3JWnK0cmORdJVk5SnBde0kNsytOjlNcqZAzH5cTol6s2ei50yv_nHW-t_5-gHmCYBKMvLerbB0k0TJ6r8ix27NzU3SUPJIP5ZdiVvaya5XlXtL_2FkMglDxPbEj9vU0Xe-omkrMJxvk2gHvQ30KhsDVrqhFO7u0WPyxe9JUVKKuHZLwBtGXflvPp8QfgH10wyI_fcC"/>
+<div>
+<div class="font-label-caps text-label-caps text-primary">KAVACH-ARC</div>
+<div class="text-on-surface-variant text-[10px] uppercase tracking-wider">Precision Security</div>
+</div>
+</div>
+<div class="text-xs text-primary border border-primary/30 bg-primary/10 rounded px-2 py-1 inline-block mt-2 font-code-md">Operational</div>
+</div>
+<div class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span> Dashboard
+                </a>
+<a class="flex items-center gap-3 text-primary bg-surface-variant border-l-4 border-primary px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">analytics</span> Analysis
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">inventory_2</span> Evidence
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">build_circle</span> Correction
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">verified_user</span> Verification
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">description</span> Reports
+                </a>
+</div>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">help</span> Support
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">settings</span> Settings
+                </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 p-margin overflow-y-auto bg-background">
+<header class="mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">Security Analysis</h1>
+<p class="text-on-surface-variant font-body-md text-body-md">Configure and initiate deep static and dynamic analysis on target source code.</p>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<!-- Configuration Panel -->
+<div class="xl:col-span-1 flex flex-col gap-6">
+<div class="bg-[#121820] border border-[#1F2937] rounded-DEFAULT overflow-hidden flex flex-col">
+<div class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C]">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">folder_open</span> Target Selection
+                            </h2>
+</div>
+<div class="p-4 flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-[#1A222C] border-l-2 border-primary border border-y-[#1F2937] border-r-[#1F2937] text-primary p-3 rounded-DEFAULT flex flex-col items-center justify-center gap-2 hover:bg-[#262a31] transition-colors">
+<span class="material-symbols-outlined">developer_board</span>
+<span class="font-label-caps text-label-caps">Built-in Demo</span>
+</button>
+<button class="bg-transparent border border-[#1F2937] text-on-surface-variant p-3 rounded-DEFAULT flex flex-col items-center justify-center gap-2 hover:border-outline-variant transition-colors">
+<span class="material-symbols-outlined">upload_file</span>
+<span class="font-label-caps text-label-caps">Upload C/C++</span>
+</button>
+</div>
+<div class="mt-2 bg-[#0A0E14] border border-[#1F2937] rounded-DEFAULT p-3">
+<div class="text-xs text-on-surface-variant mb-1">Selected Target</div>
+<div class="font-code-md text-code-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">description</span> demo_vulnerable_app.c
+                                </div>
+<div class="text-[10px] text-on-surface-variant mt-2 text-right">Size: 4.2 KB | Lang: C</div>
+</div>
+<button class="w-full bg-primary text-[#0A0E14] font-title-sm text-title-sm py-3 rounded-DEFAULT hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2 mt-4 font-bold shadow-[0_0_15px_rgba(164,230,255,0.1)]">
+<span class="material-symbols-outlined font-bold">play_arrow</span> RUN KAVACH ANALYSIS
+                            </button>
+</div>
+</div>
+<!-- Pipeline Tracker -->
+<div class="bg-[#121820] border border-[#1F2937] rounded-DEFAULT overflow-hidden">
+<div class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C]">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">account_tree</span> Analysis Pipeline
+                            </h2>
+</div>
+<div class="p-4 relative">
+<div class="absolute left-6 top-8 bottom-8 w-[1px] bg-[#1F2937]"></div>
+<div class="flex flex-col gap-6 relative z-10">
+<div class="flex items-start gap-4">
+<div class="w-5 h-5 rounded-full bg-[#065F46] border border-[#10B981] flex items-center justify-center mt-1 shrink-0">
+<span class="material-symbols-outlined text-[12px] text-[#10B981]">check</span>
+</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Target Loaded</div>
+<div class="font-code-md text-code-md text-on-surface-variant text-xs">0.2s</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-5 h-5 rounded-full bg-[#1A222C] border-2 border-primary flex items-center justify-center mt-1 shrink-0 node-pulse">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div>
+<div class="font-body-md text-body-md text-primary">Static Analysis</div>
+<div class="font-code-md text-code-md text-primary text-xs flex items-center gap-2">Running... <span class="material-symbols-outlined text-[12px] animate-spin">sync</span></div>
+</div>
+</div>
+<div class="flex items-start gap-4 opacity-50">
+<div class="w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0">
+</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Dynamic Analysis</div>
+<div class="font-code-md text-code-md text-on-surface-variant text-xs">Pending</div>
+</div>
+</div>
+<div class="flex items-start gap-4 opacity-50">
+<div class="w-5 h-5 rounded-full bg-[#1A222C] border border-[#374151] flex items-center justify-center mt-1 shrink-0">
+</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Evidence Aggregation</div>
+<div class="font-code-md text-code-md text-on-surface-variant text-xs">Pending</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Results & Details -->
+<div class="xl:col-span-2 flex flex-col gap-6">
+<div class="bg-[#121820] border border-[#1F2937] rounded-DEFAULT flex flex-col h-full min-h-[600px]">
+<div class="border-b border-[#1F2937] px-4 py-3 bg-[#1A222C] flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-on-surface uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">troubleshoot</span> Live Findings Table
+                            </h2>
+<div class="flex items-center gap-2">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+</span>
+<span class="text-xs text-on-surface-variant">Live Feed</span>
+</div>
+</div>
+<div class="p-4 flex-1 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-[#1F2937] text-on-surface-variant font-label-caps text-label-caps uppercase">
+<th class="py-2 px-3 font-normal">Severity</th>
+<th class="py-2 px-3 font-normal">Engine</th>
+<th class="py-2 px-3 font-normal">Type</th>
+<th class="py-2 px-3 font-normal">Location</th>
+<th class="py-2 px-3 font-normal text-right">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-[#1F2937] hover:bg-[#1A222C] transition-colors group">
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 text-error bg-error-container/20 border border-error/30 px-2 py-0.5 rounded text-[10px] font-bold">
+<span class="material-symbols-outlined text-[12px]">warning</span> CRITICAL
+                                            </span>
+</td>
+<td class="py-3 px-3 text-on-surface font-code-md text-code-md text-xs">Semgrep</td>
+<td class="py-3 px-3 text-on-surface">Buffer Overflow</td>
+<td class="py-3 px-3 text-primary font-code-md text-code-md text-xs">src/main.c:42</td>
+<td class="py-3 px-3 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-[#1F2937] hover:bg-[#1A222C] transition-colors bg-[#1A222C] border-l-2 border-l-primary">
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 text-tertiary-container bg-tertiary-container/10 border border-tertiary-container/30 px-2 py-0.5 rounded text-[10px] font-bold">
+<span class="material-symbols-outlined text-[12px]">error</span> HIGH
+                                            </span>
+</td>
+<td class="py-3 px-3 text-on-surface font-code-md text-code-md text-xs">AddressSanitizer</td>
+<td class="py-3 px-3 text-on-surface">Use-After-Free</td>
+<td class="py-3 px-3 text-primary font-code-md text-code-md text-xs">src/utils.c:118</td>
+<td class="py-3 px-3 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-[#1F2937] hover:bg-[#1A222C] transition-colors group">
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 text-secondary bg-secondary/10 border border-secondary/30 px-2 py-0.5 rounded text-[10px] font-bold">
+<span class="material-symbols-outlined text-[12px]">info</span> LOW
+                                            </span>
+</td>
+<td class="py-3 px-3 text-on-surface font-code-md text-code-md text-xs">Clang Static</td>
+<td class="py-3 px-3 text-on-surface">Uninitialized Variable</td>
+<td class="py-3 px-3 text-primary font-code-md text-code-md text-xs">src/parser.c:89</td>
+<td class="py-3 px-3 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Detailed Code View (Mocked for active row) -->
+<div class="mt-6 border border-[#1F2937] rounded-DEFAULT bg-[#0A0E14] overflow-hidden">
+<div class="bg-[#1A222C] px-3 py-2 border-b border-[#1F2937] flex items-center justify-between">
+<span class="font-code-md text-code-md text-xs text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">code</span> src/utils.c (AddressSanitizer UAF)
+                                    </span>
+</div>
+<div class="p-4 font-code-md text-code-md text-sm whitespace-pre overflow-x-auto">
+<span class="text-outline">116 |</span>     char *buffer = malloc(256);
+<span class="text-outline">117 |</span>     free(buffer);
+<div class="bg-[#93000a]/20 border-l-2 border-error -ml-4 pl-4 w-full block py-1"><span class="text-error mr-2">118 |</span> <span class="text-error">strcpy(buffer, input);</span> <span class="text-error-container opacity-70">// UAF detected here</span></div><span class="text-outline">119 |</span>     return 0;
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

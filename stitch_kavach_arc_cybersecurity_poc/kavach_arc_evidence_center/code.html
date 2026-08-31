@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KAVACH-ARC - Evidence Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@450&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "surface-container-highest": "#31353c",
+                        "outline": "#859399",
+                        "tertiary-fixed": "#ffddb1",
+                        "inverse-primary": "#00677f",
+                        "surface-container": "#1c2026",
+                        "surface-variant": "#31353c",
+                        "surface-dim": "#10141a",
+                        "secondary": "#c1c7d2",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-container": "#00566a",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "outline-variant": "#3c494e",
+                        "on-primary-fixed": "#001f28",
+                        "background": "#10141a",
+                        "on-secondary-fixed-variant": "#414750",
+                        "on-surface": "#dfe2eb",
+                        "surface-tint": "#4cd6ff",
+                        "primary-fixed": "#b7eaff",
+                        "on-primary": "#003543",
+                        "primary-container": "#00d1ff",
+                        "on-tertiary": "#442b00",
+                        "tertiary": "#ffd59c",
+                        "on-background": "#dfe2eb",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#dde3ee",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "surface-container-high": "#262a31",
+                        "inverse-surface": "#dfe2eb",
+                        "on-surface-variant": "#bbc9cf",
+                        "surface-container-low": "#181c22",
+                        "on-secondary-fixed": "#161c24",
+                        "tertiary-container": "#feb127",
+                        "tertiary-fixed-dim": "#ffba49",
+                        "primary": "#a4e6ff",
+                        "surface-bright": "#353940",
+                        "inverse-on-surface": "#2d3137",
+                        "on-secondary-container": "#b6bcc7",
+                        "primary-fixed-dim": "#4cd6ff",
+                        "secondary-fixed-dim": "#c1c7d2",
+                        "on-primary-fixed-variant": "#004e60",
+                        "secondary-container": "#464c55",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#2b3139",
+                        "on-tertiary-container": "#6b4700",
+                        "surface": "#10141a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max": "1440px",
+                        "gutter": "16px",
+                        "margin": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "450" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface h-screen overflow-hidden flex font-body-md text-body-md">
+<!-- TopNavBar (Generated from JSON) -->
+<header class="bg-surface-container dark:bg-surface-container text-primary dark:text-primary font-label-caps text-label-caps docked full-width top-0 border-b border-outline-variant flat no shadows fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tight">KAVACH-ARC | Autonomous Reasoning &amp; Correction</span>
+</div>
+<div class="flex items-center gap-4">
+<!-- Search bar right aligned placeholder -->
+<div class="hidden md:flex items-center bg-surface-container-high rounded border border-outline-variant px-3 py-1">
+<span class="material-symbols-outlined text-on-surface-variant mr-2 text-[18px]">search</span>
+<input class="bg-transparent border-none text-on-surface focus:outline-none font-body-sm text-body-sm w-48 p-0" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center justify-center p-2 rounded">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80 flex items-center justify-center p-2 rounded">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A macro photograph of a glowing fiber optic cable end, intensely blue and white, set against a pitch-black background. High contrast, sharp focus, representing data transfer and advanced technology. The lighting creates a subtle halo effect. Technical and pristine." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIVtfO7ls9IBvtwfpeB-tCE1U4OcD4BR5l1rs4jSap2eC4hnYIedeYl7XhuMjw_mSvvUtS1tGZJZdiYwk0eiUo1bMn2b7M9SIm3rAGSuGpF_aIhMD57RDORLRKdjAIOYrvP98oNnmuiFUH1BMEI3xEd2PiwssxX7LSVYC0xUb1cGk98eBHCyT7hvL0q5E3rJRVj3rJv99de3mQyYmlE6oNoxU8FFqdXLLtRQVxbHsrV8WaJ_aCspuC"/>
+</div>
+</header>
+<!-- SideNavBar (Generated from JSON) -->
+<nav class="bg-surface-container-low dark:bg-surface-container-low text-primary dark:text-primary font-body-md text-body-md docked left-0 h-full w-64 border-r border-outline-variant flat no shadows fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-margin z-40">
+<div class="px-4 mb-6 flex items-center gap-3">
+<img alt="System Logo" class="w-10 h-10 rounded border border-outline-variant object-cover" data-alt="A minimalist abstract logo featuring a highly geometric silver shield interlocking with a bright cyan chevron on a dark grey background. The lighting is studio-quality, casting precise, hard-edged highlights to emphasize the metallic textures. The overall aesthetic is severe, analytical, and highly technical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnaPlqienqs6BJ5Ow9DbSd7NpGLbk3YUhwor5kYNzJtTM6Q9dfdwrSl0Ua_JAEdSbAoRlbw9qt9kX0BVxKFw-Fv4swqc74KXgW8JmIAcBt1aIjWXUtbVt9p9j7bkems-T5DvrjGaqI2r2OkRZMwnzpLHnDx5t4lPW22YHPqzZYY9KaJF_zmSp1JeFgAnVwHt-nSfmZvrAhjlN1MJDMoe2VMQmj3Nl5uYsoXONiktKpsJtWp9U3RWBG"/>
+<div>
+<div class="font-label-caps text-label-caps text-primary">KAVACH-ARC</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Precision Security</div>
+</div>
+</div>
+<div class="px-4 mb-4">
+<div class="bg-primary/10 text-primary border border-primary/20 rounded px-3 py-1 font-label-caps text-label-caps inline-flex items-center gap-2 w-full justify-center">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Operational
+            </div>
+</div>
+<ul class="flex-col flex flex-1 gap-1 px-2 mt-4">
+<!-- Inactive -->
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a></li>
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">analytics</span> Analysis</a></li>
+<!-- Active (Evidence) -->
+<li><a class="text-primary bg-surface-variant border-l-4 border-primary px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span> Evidence</a></li>
+<!-- Inactive -->
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">build_circle</span> Correction</a></li>
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">verified_user</span> Verification</a></li>
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">description</span> Reports</a></li>
+</ul>
+<div class="mt-auto px-2 border-t border-outline-variant pt-4">
+<ul class="flex-col flex gap-1">
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">help</span> Support</a></li>
+<li><a class="text-on-surface-variant hover:bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 active:scale-95 transition-transform flex items-center gap-3 rounded" href="#"><span class="material-symbols-outlined">settings</span> Settings</a></li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 mt-16 overflow-y-auto p-margin bg-background">
+<header class="mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface">Evidence Center</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Aggregate view of verified anomalous indicators and diagnostic outputs.</p>
+</header>
+<div class="flex flex-col gap-8 max-w-container-max">
+<!-- STATIC ANALYSIS EVIDENCE -->
+<section class="bg-surface-container border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+<div class="px-4 py-3 border-b border-outline-variant bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">code</span>
+<h2 class="font-label-caps text-label-caps text-on-surface">STATIC ANALYSIS EVIDENCE</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant font-label-caps text-label-caps text-on-surface-variant">
+<th class="px-4 py-3 font-medium">Rule</th>
+<th class="px-4 py-3 font-medium">Severity</th>
+<th class="px-4 py-3 font-medium">File</th>
+<th class="px-4 py-3 font-medium">Line</th>
+<th class="px-4 py-3 font-medium">Message</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-3 font-code-md text-code-md text-secondary">CWE-79</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-on-error-container bg-error-container border border-error/20 font-label-caps text-label-caps">High</span>
+</td>
+<td class="px-4 py-3 font-code-md text-code-md text-on-surface-variant">src/views/login.js</td>
+<td class="px-4 py-3 font-code-md text-code-md text-right text-secondary w-24">142</td>
+<td class="px-4 py-3 text-on-surface-variant">Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</td>
+</tr>
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-3 font-code-md text-code-md text-secondary">CWE-200</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-on-tertiary-container bg-tertiary-container border border-tertiary/20 font-label-caps text-label-caps">Medium</span>
+</td>
+<td class="px-4 py-3 font-code-md text-code-md text-on-surface-variant">config/db_init.py</td>
+<td class="px-4 py-3 font-code-md text-code-md text-right text-secondary w-24">28</td>
+<td class="px-4 py-3 text-on-surface-variant">Exposure of Sensitive Information to an Unauthorized Actor</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-3 font-code-md text-code-md text-secondary">CWE-327</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-on-error-container bg-error-container border border-error/20 font-label-caps text-label-caps">Critical</span>
+</td>
+<td class="px-4 py-3 font-code-md text-code-md text-on-surface-variant">core/crypto/utils.c</td>
+<td class="px-4 py-3 font-code-md text-code-md text-right text-secondary w-24">809</td>
+<td class="px-4 py-3 text-on-surface-variant">Use of a Broken or Risky Cryptographic Algorithm (MD5)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- DYNAMIC ANALYSIS EVIDENCE -->
+<section class="bg-surface-container border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+<div class="px-4 py-3 border-b border-outline-variant bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">memory</span>
+<h2 class="font-label-caps text-label-caps text-on-surface">DYNAMIC ANALYSIS EVIDENCE</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant font-label-caps text-label-caps text-on-surface-variant">
+<th class="px-4 py-3 font-medium">Tool</th>
+<th class="px-4 py-3 font-medium">Diagnostic</th>
+<th class="px-4 py-3 font-medium">Source Location</th>
+<th class="px-4 py-3 font-medium">Execution Output</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-3 font-medium">Valgrind (Memcheck)</td>
+<td class="px-4 py-3">Heap-buffer-overflow</td>
+<td class="px-4 py-3 font-code-md text-code-md text-on-surface-variant">0x4018F3: parse_header</td>
+<td class="px-4 py-3 font-code-md text-code-md text-secondary">Invalid read of size 8 at 0x5A8E120</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-3 font-medium">Strace Monitor</td>
+<td class="px-4 py-3">Unauthorized syscall</td>
+<td class="px-4 py-3 font-code-md text-code-md text-on-surface-variant">PID 14902</td>
+<td class="px-4 py-3 font-code-md text-code-md text-secondary">execve("/bin/sh", ["sh", "-c", ...], ...) = 0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- RAW DIAGNOSTIC -->
+<section class="bg-surface-container border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+<div class="px-4 py-3 border-b border-outline-variant bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">terminal</span>
+<h2 class="font-label-caps text-label-caps text-on-surface">RAW DIAGNOSTIC EXPORT</h2>
+</div>
+<button class="bg-transparent border border-outline-variant text-inverse-surface font-label-caps text-label-caps px-3 py-1.5 rounded hover:bg-surface-container-high transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                        View Full Diagnostic
+                    </button>
+</div>
+<div class="p-4 bg-surface-container-lowest font-code-md text-code-md text-secondary overflow-x-auto whitespace-pre">
+[2023-10-27T14:32:01.445Z] [TRACE] Initiating deep trace on PID 14902
+[2023-10-27T14:32:01.448Z] [INFO] Memory snapshot acquired: 2048 MB allocated.
+[2023-10-27T14:32:01.502Z] [WARN] Found suspicious allocation pattern in sector 4.
+==14902== Memcheck, a memory error detector
+==14902== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==14902== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==14902== Command: ./server_bin --config /etc/test.conf
+==14902== 
+==14902== Invalid read of size 8
+==14902==    at 0x4018F3: parse_header (http_parser.c:112)
+==14902==    by 0x4021A7: handle_client (server.c:340)
+==14902==    by 0x4025C1: main (server.c:890)
+==14902==  Address 0x5a8e120 is 0 bytes after a block of size 2,048 alloc'd
+==14902==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==14902==    by 0x401E35: allocate_buffer (utils.c:45)
+==14902==    by 0x40214B: handle_client (server.c:330)
+==14902==    by 0x4025C1: main (server.c:890)
+                </div>
+</section>
+</div>
+</main>
+</body></html>
